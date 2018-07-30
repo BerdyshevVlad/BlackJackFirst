@@ -5,9 +5,15 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJack", "BlackJack\BlackJack.csproj", "{C71C69AF-8DD1-46AC-952A-5983E4C90A3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{3A95469C-01B5-4899-9E07-76915B639383}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{3A95469C-01B5-4899-9E07-76915B639383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{2F79BC0A-711A-4BF7-A0C5-2F9A78495A4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{2F79BC0A-711A-4BF7-A0C5-2F9A78495A4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJackConsoleApp", "BlackJackConsoleApp\BlackJackConsoleApp.csproj", "{4F68085A-3D09-41A9-BA95-CCB2409D5555}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mappers", "Mappers\Mappers.csproj", "{6A26AA90-17DF-4A42-B701-02E36E339637}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModels", "ViewModels\ViewModels.csproj", "{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +33,18 @@ Global
 		{2F79BC0A-711A-4BF7-A0C5-2F9A78495A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F79BC0A-711A-4BF7-A0C5-2F9A78495A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F79BC0A-711A-4BF7-A0C5-2F9A78495A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F68085A-3D09-41A9-BA95-CCB2409D5555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F68085A-3D09-41A9-BA95-CCB2409D5555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F68085A-3D09-41A9-BA95-CCB2409D5555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F68085A-3D09-41A9-BA95-CCB2409D5555}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A26AA90-17DF-4A42-B701-02E36E339637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A26AA90-17DF-4A42-B701-02E36E339637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A26AA90-17DF-4A42-B701-02E36E339637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A26AA90-17DF-4A42-B701-02E36E339637}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

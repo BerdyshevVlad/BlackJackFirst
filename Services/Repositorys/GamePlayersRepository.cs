@@ -1,5 +1,5 @@
 ﻿using Entities;
-using Services.IRepository;
+using Services.IRepositorys;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,42 +8,42 @@ namespace Services.Repositorys
 {
     class GamePlayersRepository : IGamePlayersRepository
     {
-        private BlackJackContext blackJackContex;
+        private BlackJackContext _blackJackContex;
 
         public GamePlayersRepository(BlackJackContext blackJackContext)
         {
-            this.blackJackContex = blackJackContext;
+            this._blackJackContex = blackJackContext;
         }
 
 
         public void DeleteGamePlayer(int gamePlayerID)
         {
-            GamePlayers gamePlayers = blackJackContex.Players.Find(gamePlayerID);
-            blackJackContex.Players.Remove(gamePlayers);
+            GamePlayers gamePlayers = _blackJackContex.Players.Find(gamePlayerID);
+            _blackJackContex.Players.Remove(gamePlayers);
         }
 
 
         public GamePlayers GetGamePlayerById(int id)
         {
-            return blackJackContex.Players.Find(id);
+            return _blackJackContex.Players.Find(id);
         }
 
 
         public IEnumerable<GamePlayers> GetGamePlayers()
         {
-            return blackJackContex.Players;
+            return _blackJackContex.Players;
         }
 
 
         public void InsertGamePlayer(GamePlayers gamePlayer)
         {
-            blackJackContex.Players.Add(gamePlayer);
+            _blackJackContex.Players.Add(gamePlayer);
         }
 
 
         public void Save()
         {
-            blackJackContex.SaveChanges();
+            _blackJackContex.SaveChanges();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Entities;
-using Services.IRepository;
+using Services.IRepositorys;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,14 +8,14 @@ namespace Services.Repositorys
 {
     public class Repository
     {
-        public IGamePlayersRepository gamePlayersRepository;
-        public IPlayingCardsRepository playingCardsRepository;
+        public IGamePlayersRepository gamePlayersRepository { get; set; }
+        public IPlayingCardsRepository playingCardsRepository { get; set; }
 
 
         public Repository()
         {
-            this.playingCardsRepository = new PlayingCardsRepository(new BlackJackContext());
-            this.gamePlayersRepository = new GamePlayersRepository(new BlackJackContext());
+            playingCardsRepository = new PlayingCardsRepository(new BlackJackContext());
+            gamePlayersRepository = new GamePlayersRepository(new BlackJackContext());
         }
 
     }

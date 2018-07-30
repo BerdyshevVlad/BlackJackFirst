@@ -26,7 +26,6 @@ namespace Entities
     {
         [Key]
         public int Id { get; set; }
-        public Value CardValue { get; set; }
-
+        public int CardValue { get; set; }
     }
 }
