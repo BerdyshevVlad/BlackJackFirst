@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Services.IRepositorys
 {
-    public interface ITestRepository<TEntity> where TEntity : class
+    public interface IGenericRepository<TEntity> where TEntity : class
     {
         IEnumerable<TEntity> Get();
         IEnumerable<TEntity> Get(Func<TEntity, bool> predicate);

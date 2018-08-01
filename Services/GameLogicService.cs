@@ -60,9 +60,9 @@ namespace Services
                 Console.WriteLine();
             }
 
-            foreach (var item in _repository.testGamePlayersRepository.Get())
+            foreach (var item in _repository.genericGamePlayersRepository.Get())
             {
-                _repository.testGamePlayersRepository.Delete(item);
+                _repository.genericGamePlayersRepository.Delete(item);
 
             }
 

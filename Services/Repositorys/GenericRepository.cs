@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Services.Repositorys
 {
-    class TestRepository<TEntity> : ITestRepository<TEntity> where TEntity : class
+    class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         private BlackJackContext _blackJackContex;
         DbSet<TEntity> _dbSet;
 
-        public TestRepository(BlackJackContext blackJackContex)
+        public GenericRepository(BlackJackContext blackJackContex)
         {
             _blackJackContex = blackJackContex;
             _dbSet = blackJackContex.Set<TEntity>();

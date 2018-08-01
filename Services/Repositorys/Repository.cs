@@ -12,8 +12,8 @@ namespace Services.Repositorys
         //public IPlayingCardsRepository<PlayingCard> playingCardsRepository { get; set; }
         
         //test
-        public ITestRepository<PlayingCard> testPlayingCardsRepository { get; set; }
-        public ITestRepository<GamePlayers> testGamePlayersRepository { get; set; }
+        public IGenericRepository<PlayingCard> genericPlayingCardsRepository { get; set; }
+        public IGenericRepository<GamePlayers> genericGamePlayersRepository { get; set; }
 
 
         public Repository()
@@ -22,8 +22,8 @@ namespace Services.Repositorys
             //gamePlayersRepository = new GamePlayersRepository<GamePlayers>(new BlackJackContext());
 
             //test
-            testPlayingCardsRepository = new TestRepository<PlayingCard>(new BlackJackContext());
-            testGamePlayersRepository = new TestRepository<GamePlayers>(new BlackJackContext());
+            genericPlayingCardsRepository = new GenericRepository<PlayingCard>(new BlackJackContext());
+            genericGamePlayersRepository = new GenericRepository<GamePlayers>(new BlackJackContext());
         }
 
     }
