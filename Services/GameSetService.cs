@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using ViewModels;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -42,17 +44,18 @@ namespace Services
         }
 
 
-        public List<GamePlayerViewModel> GetPlayers()
+        public async Task<List<GamePlayerViewModel>> GetPlayers()
         {
             List<GamePlayers> _gamePlayers = new List<GamePlayers>();
-            foreach (var item in _repository.genericGamePlayersRepository.Get())
+            foreach (var item in await _repository.genericGamePlayersRepository.Get())
+            //foreach (var item in _repository.genericGamePlayersRepository.GetPlayers())
             {
                 _gamePlayers.Add(item);
             }
 
             List<GamePlayerViewModel> gamePlayersViewModelList = _mapper.MappPlayers(_gamePlayers);
 
-            return gamePlayersViewModelList;
+            return  gamePlayersViewModelList;
         }
 
 
@@ -99,25 +102,13 @@ namespace Services
                 }
                 _repository.genericPlayingCardsRepository.Save();
             }
-
-
-                //List<PlayingCard> playingCards = new List<PlayingCard>();
-                //foreach (var item in _repository.playingCardsRepository.GetPlayingCards())
-                //{
-
-                //    playingCards.Add(item);
-                //    if (playingCards.Count < 54)
-                //        continue;
-                //}
-                //List<PlayingCardViewModel> playingCardsViewModel = _mapper.MappCards((playingCards as List<PlayingCard>));
-                //return playingCardsViewModel;
         }
 
 
-        public List<PlayingCardViewModel> GetDeck()
+        public async Task<List<PlayingCardViewModel>> GetDeck()
         {
             List<PlayingCard> playingCards = new List<PlayingCard>();
-            foreach (var item in _repository.genericPlayingCardsRepository.Get())
+            foreach (var item in await _repository.genericPlayingCardsRepository.Get())
             {
 
                 playingCards.Add(item);
@@ -129,14 +120,14 @@ namespace Services
         }
 
 
-        public List<PlayingCardViewModel> ReSetDeck()
+        public async Task<List<PlayingCardViewModel>> ReSetDeck()
         {
-            foreach (var item in _repository.genericPlayingCardsRepository.Get())
+            foreach (var item in await _repository.genericPlayingCardsRepository.Get())
             {
                 _repository.genericPlayingCardsRepository.Delete(item);
             }
             SetDeck();
-            List<PlayingCardViewModel> playingCardsViewModel = GetDeck();
+            List<PlayingCardViewModel> playingCardsViewModel = await GetDeck();
             return playingCardsViewModel;
         }
     }

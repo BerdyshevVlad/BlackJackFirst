@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ViewModels;
@@ -36,9 +37,9 @@ namespace BlackJack.Controllers
 
 
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            List<PlayingCardViewModel> cards=gameSetService.GetDeck();
+            List<PlayingCardViewModel> cards=await gameSetService.GetDeck();
 
             return View(cards);
         }
@@ -52,9 +53,9 @@ namespace BlackJack.Controllers
             return View();
         }
 
-        public ActionResult ShowPlayers()
+        public async Task<ActionResult> ShowPlayers()
         {
-            List<GamePlayerViewModel> players = gameSetService.GetPlayers();
+            List<GamePlayerViewModel> players = await gameSetService.GetPlayers();
 
             return View(players);
         }

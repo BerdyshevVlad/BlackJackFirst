@@ -7,7 +7,8 @@ namespace Services.IRepositorys
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
-        IEnumerable<TEntity> Get();
+        //IEnumerable<TEntity> GetPlayers();
+        Task<IEnumerable<TEntity>> Get();
         IEnumerable<TEntity> Get(Func<TEntity, bool> predicate);
         TEntity GetById(int id);
         bool IsExist();

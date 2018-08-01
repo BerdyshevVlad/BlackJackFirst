@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using ViewModels;
 
 namespace Services
@@ -27,10 +28,10 @@ namespace Services
             //_gamePlayers = _gameSet.GetPlayers();
         }
 
-        public void StartGame()
+        public async Task StartGame()
         {
 
-            _gamePlayers = _gameSet.GetPlayers();
+            _gamePlayers = await _gameSet.GetPlayers();
 
             for (int i = 0; i < _gamePlayers.Count; i++)
             {
@@ -60,7 +61,7 @@ namespace Services
                 Console.WriteLine();
             }
 
-            foreach (var item in _repository.genericGamePlayersRepository.Get())
+            foreach (var item in _repository.genericGamePlayersRepository.Get().Result)///////////////////////////////////////////
             {
                 _repository.genericGamePlayersRepository.Delete(item);
 

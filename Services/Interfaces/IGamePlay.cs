@@ -8,7 +8,7 @@ namespace BlackJack.Interfaces
 {
     public interface IGamePlay
     {
-        void StartGame();
+        Task StartGame();
         int OneMoreCard();
         void PlayAgain();
         void ShowCards();

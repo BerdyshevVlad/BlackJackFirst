@@ -1,8 +1,12 @@
-﻿using Entities;
+﻿using Dapper;
+using Entities;
 using Services.IRepositorys;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,13 +16,27 @@ namespace Services.Repositorys
     class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         private BlackJackContext _blackJackContex;
-        DbSet<TEntity> _dbSet;
+        private DbSet<TEntity> _dbSet;
+        //private string connectionString;
 
         public GenericRepository(BlackJackContext blackJackContex)
         {
             _blackJackContex = blackJackContex;
             _dbSet = blackJackContex.Set<TEntity>();
+            //connectionString = ConfigurationManager.ConnectionStrings["BlackJackContex"].ConnectionString;
         }
+
+
+        //private string connectionString = ConfigurationManager.ConnectionStrings["BlackJackContex"].ConnectionString;
+        //public IEnumerable<TEntity> GetPlayers()
+        //{
+        //    List<TEntity> players = new List<TEntity>();
+        //    using (SqlConnection db = new SqlConnection(connectionString))
+        //    {
+        //        players= db.Query<TEntity>("SELECT * FROM GamePlayers").ToList();
+        //    }
+        //    return players;
+        //}
 
 
         public void Delete(TEntity item)
@@ -30,13 +48,13 @@ namespace Services.Repositorys
 
         public IEnumerable<TEntity> Get(Func<TEntity, bool> predicate)
         {
-            return _dbSet.AsNoTracking().Where(predicate).ToList();
+            return  _dbSet.AsNoTracking().Where(predicate);
         }
 
 
-        public IEnumerable<TEntity> Get()
+        public async Task<IEnumerable<TEntity>> Get()
         {
-            return _dbSet.AsNoTracking().ToList();
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
 
