@@ -15,16 +15,16 @@ namespace Services
     {
 
         private List<PlayingCardViewModel> _playingCards = new List<PlayingCardViewModel>();
-        private List<GamePlayers> _gamePlayers = new List<GamePlayers>();
+        private List<GamePlayerViewModel> _gamePlayers = new List<GamePlayerViewModel>();
         private GameSetService _gameSet = new GameSetService();
         private Repository _repository = new Repository();
 
 
         public GameLogicService()
         {
-            _gameSet.InitializePlayers();
-            _playingCards=_gameSet.SetDeck();
-            _gamePlayers = _gameSet.GetPlayers();
+            //_gameSet.InitializePlayers();
+            //_playingCards=_gameSet.SetDeck();
+            //_gamePlayers = _gameSet.GetPlayers();
         }
 
         public void StartGame()
@@ -60,17 +60,17 @@ namespace Services
                 Console.WriteLine();
             }
 
-            foreach (var item in _repository.gamePlayersRepository.GetGamePlayers())
+            foreach (var item in _repository.testGamePlayersRepository.Get())
             {
-                _repository.gamePlayersRepository.DeleteGamePlayer(item.Id);
+                _repository.testGamePlayersRepository.Delete(item);
 
             }
 
-            foreach (var item in _gamePlayers)
-            {
-                _repository.gamePlayersRepository.InsertGamePlayer(item);
-                Thread.Sleep(100);
-            }
+            //foreach (var item in _gamePlayers)
+            //{
+            //    _repository.gamePlayersRepository.InsertGamePlayer(item);
+            //    Thread.Sleep(100);
+            //}
 
             PlayAgain();
             Winner();

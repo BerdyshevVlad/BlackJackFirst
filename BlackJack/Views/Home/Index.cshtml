@@ -1,20 +1,20 @@
 ﻿@model IEnumerable<ViewModels.PlayingCardViewModel>
 
-@{
-    ViewBag.Title = "Index";
-}
-
-<h2>Index</h2>
-
-<table class="table">
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CardValue)
-            </td>
-        </tr>
+    @{
+        ViewBag.Title = "Index";
     }
 
-</table>
+    <h2>Index</h2>
+
+    <table class="table">
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id):                    @Html.DisplayFor(modelItem => item.CardValue)
+                </td>
+            </tr>
+        }
+
+    </table>

@@ -18,33 +18,41 @@ namespace Services
 
         public GameSetService()
         {
-
+            SetDeck();
         }
 
 
         public GameSetService(IMapper mapper)
         {
             _mapper = mapper;
+            SetDeck();
         }
 
         public void SetBotCount(int playersCount)
         {
             for (int i = 0; i < playersCount; i++)
             {
-                _repository.gamePlayersRepository.InsertGamePlayer(new PlayerBot { Name = $"Bot{i}" });
-                _repository.gamePlayersRepository.Save();
+                
+                if (_repository.testGamePlayersRepository.IsExist($"Bot{i}")==false)
+                {
+                    _repository.testGamePlayersRepository.Insert(new PlayerBot { Name = $"Bot{i}" });
+                    _repository.testGamePlayersRepository.Save();
+                }
             }
         }
 
 
-        public List<GamePlayers> GetPlayers()
+        public List<GamePlayerViewModel> GetPlayers()
         {
             List<GamePlayers> _gamePlayers = new List<GamePlayers>();
-            foreach (var item in _repository.gamePlayersRepository.GetGamePlayers())
+            foreach (var item in _repository.testGamePlayersRepository.Get())
             {
                 _gamePlayers.Add(item);
             }
-            return _gamePlayers;
+
+            List<GamePlayerViewModel> gamePlayersViewModelList = _mapper.MappPlayers(_gamePlayers);
+
+            return gamePlayersViewModelList;
         }
 
 
@@ -55,51 +63,81 @@ namespace Services
             var playerPerson = new PlayerPerson();
             playerPerson.Name = "You";
 
-            _repository.gamePlayersRepository.InsertGamePlayer(dealer);
-            _repository.gamePlayersRepository.InsertGamePlayer(playerPerson);
-            _repository.gamePlayersRepository.Save();
-
+            if (_repository.testGamePlayersRepository.IsExist(dealer.Name) == false && _repository.testGamePlayersRepository.IsExist(playerPerson.Name) == false)
+            {
+                _repository.testGamePlayersRepository.Insert(dealer);
+                _repository.testGamePlayersRepository.Insert(playerPerson);
+                _repository.testGamePlayersRepository.Save();
+            }
         }
 
 
-        public List<PlayingCardViewModel> SetDeck()
+        public void SetDeck()
         {
-            var countOfDeckCards = 54;
-            for (int i = 0; i < countOfDeckCards; i++)
+            if (_repository.testPlayingCardsRepository.IsExist() == false)
             {
-                var cardValue = new Random().Next(1, 13);
-                switch (cardValue)
+                var countOfDeckCards = 54;
+                for (int i = 0; i < countOfDeckCards; i++)
                 {
-                    case 11:
+                    var cardValue = new Random().Next(1, 13);
+                    if (cardValue == 11)
+                    {
                         cardValue = 1;
-                        break;
-                    case 12:
+                    }
+                    if (cardValue == 12)
+                    {
                         cardValue = 2;
-                        break;
-                    case 3:
+                    }
+                    if (cardValue == 13)
+                    {
                         cardValue = 3;
-                        break;
-                    default:
-                        break;
+                    }
+
+
+                    _repository.testPlayingCardsRepository.Insert(new PlayingCard { CardValue = cardValue });
+                    Thread.Sleep(100);
                 }
-
-
-                _repository.playingCardsRepository.InsertPlayingCard(new PlayingCard { CardValue = cardValue });
-                Thread.Sleep(100);
+                _repository.testPlayingCardsRepository.Save();
             }
-            _repository.playingCardsRepository.Save();
 
+
+                //List<PlayingCard> playingCards = new List<PlayingCard>();
+                //foreach (var item in _repository.playingCardsRepository.GetPlayingCards())
+                //{
+
+                //    playingCards.Add(item);
+                //    if (playingCards.Count < 54)
+                //        continue;
+                //}
+                //List<PlayingCardViewModel> playingCardsViewModel = _mapper.MappCards((playingCards as List<PlayingCard>));
+                //return playingCardsViewModel;
+        }
+
+
+        public List<PlayingCardViewModel> GetDeck()
+        {
             List<PlayingCard> playingCards = new List<PlayingCard>();
-            //List<PlayingCardViewModel> playingCardsViewModel = new List<PlayingCardViewModel>();
-            foreach (var item in _repository.playingCardsRepository.GetPlayingCards())
+            foreach (var item in _repository.testPlayingCardsRepository.Get())
             {
 
                 playingCards.Add(item);
                 if (playingCards.Count < 54)
                     continue;
             }
-            List<PlayingCardViewModel> tmp= _mapper.MappCards((playingCards as List<PlayingCard>));
-            return _mapper.MappCards((playingCards as List<PlayingCard>));
+            List<PlayingCardViewModel> playingCardsViewModel = _mapper.MappCards((playingCards as List<PlayingCard>));
+            return playingCardsViewModel;
+        }
+
+
+        public List<PlayingCardViewModel> ReSetDeck()
+        {
+            foreach (var item in _repository.testPlayingCardsRepository.Get())
+            {
+                _repository.testPlayingCardsRepository.Delete(item);
+            }
+            SetDeck();
+            List<PlayingCardViewModel> playingCardsViewModel = GetDeck();
+            return playingCardsViewModel;
         }
     }
 }

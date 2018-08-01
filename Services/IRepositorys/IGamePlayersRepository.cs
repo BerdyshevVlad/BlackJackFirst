@@ -1,16 +1,18 @@
-﻿using Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//using Entities;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
 
-namespace Services.IRepositorys
-{
-    public interface IGamePlayersRepository
-    {
-        IEnumerable<GamePlayers> GetGamePlayers();
-        GamePlayers GetGamePlayerById(int id);
-        void InsertGamePlayer(GamePlayers gamePlayer);
-        void DeleteGamePlayer(int gamePlayerID);
-        void Save();
-    }
-}
+//namespace Services.IRepositorys
+//{
+//    public interface IGamePlayersRepository<TEntity> where TEntity : class
+//    {
+//        IEnumerable<TEntity> GetGamePlayers();
+//        IEnumerable<TEntity> GetGamePlayers(Func<TEntity, bool> predicate);
+//        TEntity GetGamePlayerById(int id);
+//        bool IsExistPlayerByName(string name);
+//        void InsertGamePlayer(TEntity gamePlayer);
+//        void DeleteGamePlayer(TEntity gamePlayer);
+//        void Save();
+//    }
+//}

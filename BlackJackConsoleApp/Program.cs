@@ -12,13 +12,13 @@ namespace BlackJackConsoleApp
     {
         static void Main(string[] args)
         {
-            GameSetService gameSet = new GameSetService();
-            GameLogicService gameLogic = new GameLogicService();
+            //GameSetService gameSet = new GameSetService();
+            //GameLogicService gameLogic = new GameLogicService();
 
 
-            gameSet.SetBotCount(3);
-            gameLogic.StartGame();
-            gameLogic.ShowCards();
+            //gameSet.SetBotCount(3);
+            //gameLogic.StartGame();
+            //gameLogic.ShowCards();
         }
     }
 }

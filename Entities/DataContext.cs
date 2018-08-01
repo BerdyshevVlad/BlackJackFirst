@@ -24,6 +24,8 @@ namespace Entities
         protected override void Seed(BlackJackContext db)
         {
            
+
         }
+
     }
 }

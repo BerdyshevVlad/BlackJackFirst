@@ -21,13 +21,13 @@ namespace BlackJack.Controllers
         IGamePlay _gamePlay;
         ISetGame _gameSet;
         IMapper _mapper;
-
+        GameSetService gameSetService;
         public HomeController()
         {
-
+            gameSetService = new GameSetService(new Mapper());
         }
 
-        public HomeController(IGamePlay gamePlay,ISetGame gameSet,IMapper mapper)
+        public HomeController(IGamePlay gamePlay, ISetGame gameSet, IMapper mapper)
         {
             _gamePlay = gamePlay;
             _gameSet = gameSet;
@@ -38,24 +38,25 @@ namespace BlackJack.Controllers
 
         public ActionResult Index()
         {
-            GameSetService gameSetService = new GameSetService(new Mapper());
-            List<PlayingCardViewModel> cards=gameSetService.SetDeck();
+            List<PlayingCardViewModel> cards=gameSetService.GetDeck();
 
             return View(cards);
         }
 
-        public ActionResult About()
+        public ActionResult SetGame()
         {
-            ViewBag.Message = "Your application description page.";
+            
+            gameSetService.InitializePlayers();
+            gameSetService.SetBotCount(3);
 
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult ShowPlayers()
         {
-            ViewBag.Message = "Your contact page.";
+            List<GamePlayerViewModel> players = gameSetService.GetPlayers();
 
-            return View();
+            return View(players);
         }
     }
 }

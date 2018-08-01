@@ -1,15 +1,18 @@
-﻿using Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//using Entities;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
 
-namespace Services.IRepositorys
-{
-    public interface IPlayingCardsRepository    {
-        IEnumerable<PlayingCard> GetPlayingCards();
-        PlayingCard GetPlayingCardById(int id);
-        void InsertPlayingCard(PlayingCard playingCard);
-        void DeletePlayingCard(int playingCardID);
-        void Save();
-    }
-}
+//namespace Services.IRepositorys
+//{
+//    public interface IPlayingCardsRepository<TEntity> where TEntity : class
+//    {
+//        IEnumerable<TEntity> GetPlayingCards();
+//        IEnumerable<TEntity> GetPlayingCards(Func<TEntity, bool> predicate);
+//        TEntity GetPlayingCardById(int id);
+//        bool IsExistCards();
+//        void InsertPlayingCard(TEntity playingCard);
+//        void DeletePlayingCard(TEntity playingCard);
+//        void Save();
+//    }
+//}

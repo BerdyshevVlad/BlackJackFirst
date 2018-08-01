@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlackJack.Interfaces
 {
-    public interface ISetGame
+    public interface ISetGame 
     {
 
         void SetBotCount(int playersCount);
