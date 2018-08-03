@@ -1,5 +1,4 @@
 ﻿using BlackJack.Interfaces;
-using Entities;
 using Services.Repositorys;
 using System;
 using System.Collections;
@@ -16,7 +15,7 @@ namespace Services
     {
 
         private List<PlayingCardViewModel> _playingCards = new List<PlayingCardViewModel>();
-        private List<GamePlayerViewModel> _gamePlayers = new List<GamePlayerViewModel>();
+        private List<GamePlayerViewModel> _GamePlayer = new List<GamePlayerViewModel>();
         private GameSetService _gameSet = new GameSetService();
         private Repository _repository = new Repository();
 
@@ -25,51 +24,52 @@ namespace Services
         {
             //_gameSet.InitializePlayers();
             //_playingCards=_gameSet.SetDeck();
-            //_gamePlayers = _gameSet.GetPlayers();
+            //_GamePlayer = _gameSet.GetPlayers();
         }
 
         public async Task StartGame()
         {
 
-            _gamePlayers = await _gameSet.GetPlayers();
+            _GamePlayer = await _gameSet.GetPlayers();
 
-            for (int i = 0; i < _gamePlayers.Count; i++)
+            for (int i = 0; i < _GamePlayer.Count; i++)
             {
                 for (int j = 0; j < 2; j++)
                 {
 
-                    int card = (_playingCards[new Random().Next(0, _playingCards.Count)] as PlayingCardViewModel).CardValue;
-                    _gamePlayers[i].Score += card;
+                    //int card = (_playingCards[new Random().Next(0, _playingCards.Count)] as PlayingCardViewModel).CardValue;
+                    int card = OneMoreCard();
+                    _GamePlayer[i].Score += card;
                     _playingCards.RemoveAt(i);
 
 
-                    if (_gamePlayers[i].Score == 11)
+                    if (_GamePlayer[i].Score == 11)
                     {
-                        Console.WriteLine($"Player: { _gamePlayers[i].Name}, Score: Jack");
+                        Console.WriteLine($"Player: { _GamePlayer[i].Name}, Score: Jack");
                     }
-                    else if (_gamePlayers[i].Score == 12)
+                    else if (_GamePlayer[i].Score == 12)
                     {
-                        Console.WriteLine($"Player: { _gamePlayers[i].Name}, Score: Queen");
+                        Console.WriteLine($"Player: { _GamePlayer[i].Name}, Score: Queen");
                     }
-                    else if (_gamePlayers[i].Score == 13)
+                    else if (_GamePlayer[i].Score == 13)
                     {
-                        Console.WriteLine($"Player: { _gamePlayers[i].Name}, Score: King");
+                        Console.WriteLine($"Player: { _GamePlayer[i].Name}, Score: King");
                     }
                     else
-                        Console.WriteLine($"Player: { _gamePlayers[i].Name}, Score: { card}");
+                        Console.WriteLine($"Player: { _GamePlayer[i].Name}, Score: { card}");
                 }
                 Console.WriteLine();
             }
 
-            foreach (var item in _repository.genericGamePlayersRepository.Get().Result)///////////////////////////////////////////
+            foreach (var item in await _repository.genericGamePlayerRepository.Get())
             {
-                _repository.genericGamePlayersRepository.Delete(item);
+                await _repository.genericGamePlayerRepository.Delete(item.Id);
 
             }
 
-            //foreach (var item in _gamePlayers)
+            //foreach (var item in _GamePlayer)
             //{
-            //    _repository.gamePlayersRepository.InsertGamePlayer(item);
+            //    _repository.GamePlayerRepository.InsertGamePlayer(item);
             //    Thread.Sleep(100);
             //}
 
@@ -89,10 +89,10 @@ namespace Services
         public void PlayAgain()
         {
             int tmp = 0;
-            for (int i = 0; tmp < _gamePlayers.Count - 1; i++)
+            for (int i = 0; tmp < _GamePlayer.Count - 1; i++)
             {
                 ShowCards();
-                foreach (var item in _gamePlayers)
+                foreach (var item in _GamePlayer)
                 {
                     if (item.Score < 17 && item.Name != "You")
                     {
@@ -120,7 +120,6 @@ namespace Services
                         }
                     }
                 }
-
             }
         }
 
@@ -129,7 +128,7 @@ namespace Services
         {
             Console.WriteLine();
             Console.WriteLine();
-            foreach (var item in _gamePlayers)
+            foreach (var item in _GamePlayer)
             {
                 Console.WriteLine($"Player: {item.Name}, Sum: {item.Score}");
             }
@@ -138,10 +137,9 @@ namespace Services
 
         public void Winner()
         {
-
-            int max = _gamePlayers.Where(x => x.Score <= 21).Max(x => x.Score);
+            int max = _GamePlayer.Where(x => x.Score <= 21).Max(x => x.Score);
             Console.WriteLine("Winners: ");
-            foreach (var item in _gamePlayers)
+            foreach (var item in _GamePlayer)
             {
                 if (item.Score == max)
                 {

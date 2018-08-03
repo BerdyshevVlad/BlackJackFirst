@@ -1,4 +1,5 @@
-﻿using BlackJack.Interfaces;
+﻿using BlackJack.Filters;
+using BlackJack.Interfaces;
 using Entities;
 using Mappers;
 using Services;
@@ -39,17 +40,24 @@ namespace BlackJack.Controllers
 
         public async Task<ActionResult> Index()
         {
-            List<PlayingCardViewModel> cards=await gameSetService.GetDeck();
-
+            await gameSetService.SetDeck();
+            List<PlayingCardViewModel> cards = await gameSetService.GetDeck();
             return View(cards);
         }
 
-        public ActionResult SetGame()
-        {
-            
-            gameSetService.InitializePlayers();
-            gameSetService.SetBotCount(3);
 
+        [ExceptionLogger]
+        public async Task<ActionResult> SetGame()
+        {
+            try
+            {
+                await gameSetService.InitializePlayers();
+                await gameSetService.SetBotCount(3);
+            }
+            catch(Exception ex)
+            {
+                return View("Error", new string[] { ex.Message });
+            }
             return View();
         }
 

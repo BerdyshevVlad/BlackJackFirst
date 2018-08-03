@@ -10,11 +10,12 @@ namespace Services.IRepositorys
         //IEnumerable<TEntity> GetPlayers();
         Task<IEnumerable<TEntity>> Get();
         IEnumerable<TEntity> Get(Func<TEntity, bool> predicate);
-        TEntity GetById(int id);
+        Task<TEntity> GetById(int id);
         bool IsExist();
         bool IsExist(string name);
-        void Insert(TEntity item);
-        void Delete(TEntity item);
-        void Save();
+        Task Insert(TEntity item);
+        Task Delete(TEntity item);
+        Task Delete(int id);
+        Task Save();
     }
 }

@@ -1,4 +1,4 @@
-﻿using Entities;
+﻿using DataAccessLayer.Entities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace BlackJack.Interfaces
     {
 
         void SetBotCount(int playersCount);
-        List<GamePlayers> GetPlayers();
+        List<GamePlayer> GetPlayers();
         void InitializePlayers();
         ArrayList SetDeck();
     }

@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Entities;
+using DataAccessLayer;
 using Services.IRepositorys;
 using System;
 using System.Collections.Generic;
@@ -33,22 +33,28 @@ namespace Services.Repositorys
         //    List<TEntity> players = new List<TEntity>();
         //    using (SqlConnection db = new SqlConnection(connectionString))
         //    {
-        //        players= db.Query<TEntity>("SELECT * FROM GamePlayers").ToList();
+        //        players= db.Query<TEntity>("SELECT * FROM GamePlayer").ToList();
         //    }
         //    return players;
         //}
 
-
-        public void Delete(TEntity item)
+        public async Task Delete(TEntity item)
         {
-            _dbSet.Remove(item);
-            _blackJackContex.SaveChanges();
+             var result=_dbSet.Find(item);
+            _dbSet.Remove(result);
+            //await _blackJackContex.SaveChangesAsync();
         }
 
+        public async Task Delete(int id)
+        {
+            var result = _dbSet.Find(id);
+            _dbSet.Remove(result);
+            await _blackJackContex.SaveChangesAsync();
+        }
 
         public IEnumerable<TEntity> Get(Func<TEntity, bool> predicate)
         {
-            return  _dbSet.AsNoTracking().Where(predicate);
+            return _dbSet.AsNoTracking().Where(predicate);
         }
 
 
@@ -58,8 +64,7 @@ namespace Services.Repositorys
         }
 
 
-
-        public  bool IsExist()
+        public bool IsExist()
         {
             bool existOrNot = _dbSet.Any();
             return existOrNot;
@@ -73,22 +78,22 @@ namespace Services.Repositorys
         }
 
 
-        public TEntity GetById(int id)
+        public async Task<TEntity> GetById(int id)
         {
-            return _dbSet.Find(id);
+            return await _dbSet.FindAsync(id);
         }
 
 
-        public void Insert(TEntity playingCard)
+        public async Task Insert(TEntity playingCard)
         {
-            _dbSet.Add(playingCard);
-            _blackJackContex.SaveChanges();
+             _dbSet.Add(playingCard);
+            await _blackJackContex.SaveChangesAsync();
         }
 
 
-        public void Save()
+        public async Task Save()
         {
-            _blackJackContex.SaveChanges();
+            await _blackJackContex.SaveChangesAsync();
         }
     }
 }

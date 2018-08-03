@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mappers", "Mappers\Mappers.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModels", "ViewModels\ViewModels.csproj", "{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{2983ECCF-B0D3-41A0-A421-ADCE30458A71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F6E514E-B6F3-4113-B00C-32A097A7EF8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2983ECCF-B0D3-41A0-A421-ADCE30458A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2983ECCF-B0D3-41A0-A421-ADCE30458A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2983ECCF-B0D3-41A0-A421-ADCE30458A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2983ECCF-B0D3-41A0-A421-ADCE30458A71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

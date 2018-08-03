@@ -1,5 +1,4 @@
-﻿using Entities;
-using Services.Interfaces;
+﻿using Services.Interfaces;
 using Services.Repositorys;
 using System;
 using System.Collections;
@@ -9,6 +8,7 @@ using System.Threading;
 using ViewModels;
 using System.IO;
 using System.Threading.Tasks;
+using DataAccessLayer.Entities;
 
 namespace Services
 {
@@ -20,87 +20,112 @@ namespace Services
 
         public GameSetService()
         {
-            SetDeck();
         }
 
 
         public GameSetService(IMapper mapper)
         {
             _mapper = mapper;
-            SetDeck();
         }
 
-        public void SetBotCount(int playersCount)
+
+        public async Task SetBotCount(int playersCount)
         {
-            for (int i = 0; i < playersCount; i++)
+            //throw new Exception("MY");
+            try
             {
-                
-                if (_repository.genericGamePlayersRepository.IsExist($"Bot{i}")==false)
+                for (int i = 0; i < playersCount; i++)
                 {
-                    _repository.genericGamePlayersRepository.Insert(new PlayerBot { Name = $"Bot{i}" });
-                    _repository.genericGamePlayersRepository.Save();
+
+                    if (_repository.genericGamePlayerRepository.IsExist($"Bot{i}") == false)
+                    {
+                        await _repository.genericGamePlayerRepository.Insert(new PlayerBot { Name = $"Bot{i}" });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
 
         public async Task<List<GamePlayerViewModel>> GetPlayers()
         {
-            List<GamePlayers> _gamePlayers = new List<GamePlayers>();
-            foreach (var item in await _repository.genericGamePlayersRepository.Get())
-            //foreach (var item in _repository.genericGamePlayersRepository.GetPlayers())
+            List<GamePlayerViewModel> GamePlayerViewModelList;
+            List<GamePlayer> _GamePlayer = new List<GamePlayer>();
+            try
             {
-                _gamePlayers.Add(item);
+                foreach (var item in await _repository.genericGamePlayerRepository.Get())
+                //foreach (var item in _repository.genericGamePlayerRepository.GetPlayers())
+                {
+                    _GamePlayer.Add(item);
+                }
+
+                GamePlayerViewModelList = _mapper.MappPlayers(_GamePlayer);
+
             }
-
-            List<GamePlayerViewModel> gamePlayersViewModelList = _mapper.MappPlayers(_gamePlayers);
-
-            return  gamePlayersViewModelList;
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return GamePlayerViewModelList;
         }
 
 
-        public void InitializePlayers()
+        public async Task InitializePlayers()
         {
             var dealer = new Dealer();
             dealer.Name = "Dealer";
             var playerPerson = new PlayerPerson();
             playerPerson.Name = "You";
 
-            if (_repository.genericGamePlayersRepository.IsExist(dealer.Name) == false && _repository.genericGamePlayersRepository.IsExist(playerPerson.Name) == false)
+            try
             {
-                _repository.genericGamePlayersRepository.Insert(dealer);
-                _repository.genericGamePlayersRepository.Insert(playerPerson);
-                _repository.genericGamePlayersRepository.Save();
+                if (_repository.genericGamePlayerRepository.IsExist(dealer.Name) == false && _repository.genericGamePlayerRepository.IsExist(playerPerson.Name) == false)
+                {
+                    await _repository.genericGamePlayerRepository.Insert(dealer);
+                    await _repository.genericGamePlayerRepository.Insert(playerPerson);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
 
-        public void SetDeck()
+        public async Task SetDeck()
         {
-            if (_repository.genericPlayingCardsRepository.IsExist() == false)
+            try
             {
-                var countOfDeckCards = 54;
-                for (int i = 0; i < countOfDeckCards; i++)
+                if (_repository.genericPlayingCardsRepository.IsExist() == false)
                 {
-                    var cardValue = new Random().Next(1, 13);
-                    if (cardValue == 11)
+                    var countOfDeckCards = 54;
+                    for (int i = 0; i < countOfDeckCards; i++)
                     {
-                        cardValue = 1;
-                    }
-                    if (cardValue == 12)
-                    {
-                        cardValue = 2;
-                    }
-                    if (cardValue == 13)
-                    {
-                        cardValue = 3;
-                    }
+                        var cardValue = new Random().Next(1, 13);
+                        if (cardValue == 11)
+                        {
+                            cardValue = 1;
+                        }
+                        if (cardValue == 12)
+                        {
+                            cardValue = 2;
+                        }
+                        if (cardValue == 13)
+                        {
+                            cardValue = 3;
+                        }
 
-
-                    _repository.genericPlayingCardsRepository.Insert(new PlayingCard { CardValue = cardValue });
-                    Thread.Sleep(100);
+                        await _repository.genericPlayingCardsRepository.Insert(new PlayingCard { CardValue = cardValue });
+                        Thread.Sleep(100);
+                    }
                 }
-                _repository.genericPlayingCardsRepository.Save();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
@@ -108,26 +133,46 @@ namespace Services
         public async Task<List<PlayingCardViewModel>> GetDeck()
         {
             List<PlayingCard> playingCards = new List<PlayingCard>();
-            foreach (var item in await _repository.genericPlayingCardsRepository.Get())
+            List<PlayingCardViewModel> playingCardsViewModel;
+            try
             {
+                foreach (var item in await _repository.genericPlayingCardsRepository.Get())
+                {
 
-                playingCards.Add(item);
-                if (playingCards.Count < 54)
-                    continue;
+                    playingCards.Add(item);
+                    if (playingCards.Count < 54)
+                        continue;
+                }
+                playingCardsViewModel = _mapper.MappCards((playingCards as List<PlayingCard>));
             }
-            List<PlayingCardViewModel> playingCardsViewModel = _mapper.MappCards((playingCards as List<PlayingCard>));
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
             return playingCardsViewModel;
         }
 
 
         public async Task<List<PlayingCardViewModel>> ReSetDeck()
         {
-            foreach (var item in await _repository.genericPlayingCardsRepository.Get())
+            List<PlayingCardViewModel> playingCardsViewModel;
+            try
             {
-                _repository.genericPlayingCardsRepository.Delete(item);
+                //var tmp = await Task.WhenAll(_repository.genericPlayingCardsRepository.Get());
+                var playingCardList = await _repository.genericPlayingCardsRepository.Get();
+
+                foreach (var item in playingCardList)
+                {
+                    await _repository.genericPlayingCardsRepository.Delete(item.Id);
+                }
+
+                await SetDeck();
+                playingCardsViewModel = await GetDeck();
             }
-            SetDeck();
-            List<PlayingCardViewModel> playingCardsViewModel = await GetDeck();
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
             return playingCardsViewModel;
         }
     }

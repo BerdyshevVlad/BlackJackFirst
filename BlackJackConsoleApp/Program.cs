@@ -1,5 +1,4 @@
-﻿using BlackJackServices;
-using Services;
+﻿using Services.Repositorys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +11,11 @@ namespace BlackJackConsoleApp
     {
         static void Main(string[] args)
         {
-            //GameSetService gameSet = new GameSetService();
-            //GameLogicService gameLogic = new GameLogicService();
+            BlackJackServices.Services services = new BlackJackServices.Services();
 
-
-            //gameSet.SetBotCount(3);
-            //gameLogic.StartGame();
-            //gameLogic.ShowCards();
+            services.SetBotCount(3);
+            services.Start();
+            //services.ShowCards();
         }
     }
 }

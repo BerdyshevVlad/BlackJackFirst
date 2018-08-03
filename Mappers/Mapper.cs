@@ -1,4 +1,4 @@
-﻿using Entities;
+﻿using DataAccessLayer.Entities;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace Mappers
         }
 
 
-        public List<GamePlayerViewModel> MappPlayers(List<GamePlayers> gamePlayers)
+        public List<GamePlayerViewModel> MappPlayers(List<GamePlayer> gamePlayers)
         {
             var playersViewModelList = new List<GamePlayerViewModel>();
             for (int i = 0; i < gamePlayers.Count; i++)
@@ -34,7 +34,7 @@ namespace Mappers
                 var player = new GamePlayerViewModel();
                 player.Name = gamePlayers[i].Name;
                 player.Score = gamePlayers[i].Score;
-                player.Status = gamePlayers[i].Status;
+                //player.Status = gamePlayers[i].Status;
                 player.WinsNumbers = gamePlayers[i].WinsNumbers;
                 playersViewModelList.Add(player);
             }
