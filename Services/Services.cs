@@ -1,8 +1,6 @@
 ﻿using Services.Repositorys;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Linq;
 using DataAccessLayer.Entities;
@@ -20,11 +18,11 @@ namespace BlackJackServices
         private IMapper _mapper;
 
 
-        public Services()
-        {
-            InitializePlayers();
-            SetDeck();
-        }
+        //public Services()
+        //{
+        //    InitializePlayers();
+        //    SetDeck();
+        //}
 
         public Services(IMapper mapper)
         {

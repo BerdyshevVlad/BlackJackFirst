@@ -1,11 +1,4 @@
 ﻿using Mappers;
-using Services.Interfaces;
-using Services.Repositorys;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlackJackConsoleApp
 {
@@ -17,7 +10,6 @@ namespace BlackJackConsoleApp
 
             services.SetBotCount(3);
             services.Start();
-            //services.ShowCards();
         }
     }
 }
