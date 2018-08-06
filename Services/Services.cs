@@ -34,7 +34,9 @@ namespace BlackJackServices
 
         public void SetBotCount(int playersCount)
         {
-            for (int i = 0; i < playersCount; i++)
+            int maxCount = 5;
+            int botCount = playersCount > maxCount ? maxCount : playersCount;
+            for (int i = 0; i < botCount; i++)
             {
                 _repository.GamePlayerRepository.InsertGamePlayer(new PlayerBot { Name = $"Bot{i}",PlayingCards=new List<PlayingCard>()});
                 _repository.GamePlayerRepository.Save();
@@ -86,14 +88,6 @@ namespace BlackJackServices
         //}
 
 
-
-        //public int TakeCard()
-        //{
-        //    int card = (playingCards[new Random().Next(0, playingCards.Count)] as PlayingCard).CardValue;
-        //    return card;
-        //}
-
-
         
         public PlayingCardViewModel DrawCard()
         {
@@ -118,28 +112,44 @@ namespace BlackJackServices
         }
 
 
-        public void Start()
+        public List<GamePlayerViewModel> HandOverCards()
         {
+            List<GamePlayerViewModel> playerModelList = null;
             int handOutCardsFirstTime = 2;
             for (int i = 0; i < handOutCardsFirstTime; i++)
             {
+                GamePlayerViewModel playerModel = null;
+                playerModelList = new List<GamePlayerViewModel>();
                 foreach (var item in _repository.GamePlayerRepository.GetGamePlayer())
                 {
                     if (item.Score < 17)
                     {
-                        PlayingCard card =_mapper.MappCardsViewModel(DrawCard());
-                        TakeCard(item,card);
+                        PlayingCard card = _mapper.MappCardsViewModel(DrawCard());
+                        playerModel = TakeCard(item, card);
+                        playerModelList.Add(playerModel);
                         Thread.Sleep(200);
                     }
                 }
             }
-            ShowCards();
+            return playerModelList;
+        }
 
-            ShowResult();
 
-            PlayAgain();
+        public void Start()
+        {
 
-            Winner();
+            var t=HandOverCards();
+
+            //ShowCards();
+
+            ShowTCardsestWithParam(t);
+            SHowTestResultWithParam(t);
+
+            //ShowResult();
+
+            //PlayAgain();
+
+            //Winner();
         }
 
 
@@ -271,6 +281,33 @@ namespace BlackJackServices
                     
                 }
                 Console.WriteLine();
+            }
+        }
+
+        public void ShowTCardsestWithParam(List<GamePlayerViewModel> playerModel)
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach (var item in playerModel)
+            {
+                Console.Write($"Player: {item.Name}: ");
+                foreach (var i in item.PlayingCards)
+                {
+                    Console.Write($"Card: {i.CardValue}, ");
+
+                }
+                Console.WriteLine();
+            }
+        }
+
+
+        public void SHowTestResultWithParam(List<GamePlayerViewModel> playerModel)
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach (var item in playerModel)
+            {
+                Console.WriteLine($"Player: {item.Name}, Sum: {item.Score}");
             }
         }
 
