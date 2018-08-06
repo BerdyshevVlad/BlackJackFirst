@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAccessLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,6 @@ namespace ViewModels
         public int Score { get; set; }
         public int WinsNumbers { get; set; }
         public string Status { get; set; }
+        public virtual IEnumerable<PlayingCard> PlayingCards { get; set; }
     }
 }

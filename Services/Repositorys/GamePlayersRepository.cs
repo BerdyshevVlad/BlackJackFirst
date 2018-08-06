@@ -65,6 +65,13 @@ namespace Services.Repositorys
         }
 
 
+        public void Update(GamePlayer item)
+        {
+            _blackJackContex.Entry(item).State = EntityState.Modified;
+            _blackJackContex.SaveChanges();
+        }
+
+
         public void Save()
         {
             _blackJackContex.SaveChanges();

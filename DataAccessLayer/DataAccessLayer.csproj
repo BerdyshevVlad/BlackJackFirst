@@ -54,26 +54,20 @@
     <Compile Include="Entities\PlayerBot.cs" />
     <Compile Include="Entities\PlayerPerson.cs" />
     <Compile Include="Entities\PlayingCard.cs" />
-    <Compile Include="Migrations\201808031334519_MigrateDB.cs" />
-    <Compile Include="Migrations\201808031334519_MigrateDB.Designer.cs">
-      <DependentUpon>201808031334519_MigrateDB.cs</DependentUpon>
+    <Compile Include="Migrations\201808060850323_DBMigration.cs" />
+    <Compile Include="Migrations\201808060850323_DBMigration.Designer.cs">
+      <DependentUpon>201808060850323_DBMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Entities\Entities.csproj">
-      <Project>{3A95469C-01B5-4899-9E07-76915B639383}</Project>
-      <Name>Entities</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201808031334519_MigrateDB.resx">
-      <DependentUpon>201808031334519_MigrateDB.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808060850323_DBMigration.resx">
+      <DependentUpon>201808060850323_DBMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,6 @@
-﻿using Services.Repositorys;
+﻿using Mappers;
+using Services.Interfaces;
+using Services.Repositorys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace BlackJackConsoleApp
     {
         static void Main(string[] args)
         {
-            BlackJackServices.Services services = new BlackJackServices.Services();
+            BlackJackServices.Services services = new BlackJackServices.Services(new Mapper());
 
             services.SetBotCount(3);
             services.Start();

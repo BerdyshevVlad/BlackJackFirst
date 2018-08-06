@@ -13,6 +13,7 @@ namespace Services.IRepositorys
         bool IsExistPlayerByName(string name);
         void InsertGamePlayer(GamePlayer gamePlayer);
         void DeleteGamePlayer(GamePlayer gamePlayer);
+        void Update(GamePlayer item);
         void Save();
     }
 }

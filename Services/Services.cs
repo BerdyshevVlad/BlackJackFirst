@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Linq;
 using DataAccessLayer.Entities;
+using ViewModels;
+using Services.Interfaces;
 
 namespace BlackJackServices
 {
@@ -14,13 +16,21 @@ namespace BlackJackServices
         private Repository _repository = new Repository();
         private List<GamePlayer> _gamePlayers = new List<GamePlayer>();
         private List<PlayingCard> playingCards = new List<PlayingCard>();
-        //private CardDeck playingCards = new CardDeck();
+        private List<GamePlayerViewModel> playerViewModelList = new List<GamePlayerViewModel>();
+        private IMapper _mapper;
 
 
         public Services()
         {
             InitializePlayers();
             SetDeck();
+        }
+
+        public Services(IMapper mapper)
+        {
+            InitializePlayers();
+            SetDeck();
+            _mapper = mapper;
         }
 
 
@@ -87,77 +97,126 @@ namespace BlackJackServices
 
 
         
-        public PlayingCard DrawCard()
+        public PlayingCardViewModel DrawCard()
         {
             PlayingCard card = (playingCards[GetCards().Count-1] as PlayingCard);
+            PlayingCardViewModel cardModel = new PlayingCardViewModel();
+            cardModel = _mapper.MappCards(card);
             _repository.playingCardsRepository.DeletePlayingCard(card.Id);
             _repository.playingCardsRepository.Save();
-            Thread.Sleep(200);
-            return card;
+            Thread.Sleep(100);
+            return cardModel;
         }
 
 
-        public void TakeCard(GamePlayer player,PlayingCard playingCard)
+        private GamePlayerViewModel TakeCard(GamePlayer player,PlayingCard playingCard)
         {
-            var playerModel = _repository.GamePlayerRepository.GetGamePlayerById(player.Id);
-            playerModel.Score += playingCard.CardValue;
+            var gamePlayer = _repository.GamePlayerRepository.GetGamePlayerById(player.Id);
+            gamePlayer.Score += playingCard.CardValue;
+            var playerModel = _mapper.MappPlayers(gamePlayer);
             (_repository.GamePlayerRepository.GetGamePlayerById(player.Id).PlayingCards as List<PlayingCard>).Add(playingCard);
             _repository.GamePlayerRepository.Save();
+            return playerModel;
         }
 
 
         public void Start()
         {
-            for (int i = 0; i < 2; i++)
+            int handOutCardsFirstTime = 2;
+            for (int i = 0; i < handOutCardsFirstTime; i++)
             {
                 foreach (var item in _repository.GamePlayerRepository.GetGamePlayer())
                 {
                     if (item.Score < 17)
                     {
-                        PlayingCard card = DrawCard();
+                        PlayingCard card =_mapper.MappCardsViewModel(DrawCard());
                         TakeCard(item,card);
                         Thread.Sleep(200);
                     }
-                    //if (item.Name == "You" && item.Score < 21)
-                    //{
-                    //    Console.WriteLine("Take or no? y/n");
-                    //    string yesOrNo = Console.ReadLine();
-                    //    if (yesOrNo == "y")
-                    //    {
-                    //        PlayingCard card = DrawCard();
-                    //        TakeCard(item,card);
-                    //        item.Status = "Stop";
-                    //    }
-                    //}
                 }
             }
             ShowCards();
+
             ShowResult();
+
+            PlayAgain();
+
+            Winner();
         }
 
 
-        //public void ContinueOrDeny(GamePlayer player, PlayingCard card)
-        //{
-        //    Console.WriteLine("Take or no? y/n");
-        //    string yesOrNo = Console.ReadLine();
-        //    if (yesOrNo == "y")
-        //    {
-        //        TakeCard(player,);
-        //    }
-        //}
+        public GamePlayerViewModel ContinueOrDeny(GamePlayer player, PlayingCard card)
+        {
+            GamePlayerViewModel playerModel = new GamePlayerViewModel();
+            if (player.Name == "You" && player.Score < 21 && player.Status!="Stop")
+            {
+                Console.WriteLine("Take or no? y/n");
+                string yesOrNo = Console.ReadLine();
+                if (yesOrNo == "y")
+                {
+                    playerModel = TakeCard(player, card);
+                }
+                if (yesOrNo == "n")
+                {
+                    player.Status = "Stop";
+                    _repository.GamePlayerRepository.Update(player);
+                }
+            }
+            if (player.Name == "You" && player.Score >= 21)
+            {
+                player.Status = "Stop";
+                _repository.GamePlayerRepository.Update(player);
+            }
+            if (player.Name != "You" && player.Score < 17)
+            {
+                playerModel = TakeCard(player, card);
+                _repository.GamePlayerRepository.Update(player);
+            }
+            if (player.Name != "You" && player.Score >= 17)
+            {
+                player.Status = "Stop";
+                _repository.GamePlayerRepository.Update(player);
+            }
+            return playerModel;
+        }
+
+
+        public void PlayAgain()
+        {           
+            for (; ; )
+            {
+                var playersList = GetPlayers().ToList().Where(x => x.Status != "Stop").ToList();
+                if (playersList.Count <=0)
+                {
+                    break;
+                }
+
+                for (int j = 0; j < playersList.Count; j++)
+                {
+                    PlayingCard card = _mapper.MappCardsViewModel(DrawCard());
+                    ContinueOrDeny((playersList)[j], card);
+                }
+
+
+                ShowCards();
+                ShowResult();
+            }
+        }
 
 
         //public void PlayAgain()
         //{
         //    int tmp = 0;
-        //    for (int i = 0; tmp < _GamePlayer.Count - 1; i++)
+        //    var t = GetPlayers().Count;
+        //    for (int i = 0; tmp < t; i++)
         //    {
-        //        ShowCards();
-        //        foreach (var item in _GamePlayer)
+        //        ShowResult();
+        //        foreach (var item in (_repository.GamePlayerRepository.GetGamePlayer() as List<GamePlayer>))
         //        {
         //            if (item.Score < 17 && item.Name != "You")
         //            {
-        //                item.Score += TakeCard();
+        //                PlayingCard card = DrawCard();
+        //                TakeCard(item,card);
         //                Console.WriteLine($"Player:{item.Name}, score: {item.Score}");
         //                Thread.Sleep(100);
         //            }
@@ -172,7 +231,8 @@ namespace BlackJackServices
         //                string yesOrNo = Console.ReadLine();
         //                if (yesOrNo == "y")
         //                {
-        //                    item.Score += TakeCard();
+        //                    PlayingCard card = DrawCard();
+        //                    TakeCard(item, card);
         //                    item.Status = "Stop";
         //                }
         //                else
@@ -188,9 +248,9 @@ namespace BlackJackServices
 
         public void Winner()
         {
-            int max = _gamePlayers.Where(x => x.Score <= 21).Max(x => x.Score);
+            int max = GetPlayers().Where(x => x.Score <= 21).Max(x => x.Score);
             Console.WriteLine("Winners: ");
-            foreach (var item in _gamePlayers)
+            foreach (var item in GetPlayers())
             {
                 if (item.Score == max)
                 {
@@ -228,13 +288,9 @@ namespace BlackJackServices
         }
 
 
-        private List<GamePlayer> GetPlayers()
+        private IEnumerable<GamePlayer> GetPlayers()
         {
-            foreach (var item in _repository.GamePlayerRepository.GetGamePlayer())
-            {
-                _gamePlayers.Add(item);
-            }
-            return _gamePlayers;
+            return _repository.GamePlayerRepository.GetGamePlayer();
         }
 
 
@@ -280,7 +336,6 @@ namespace BlackJackServices
                     cardValue = 3;
                 }
 
-
                 _repository.playingCardsRepository.InsertPlayingCard(new PlayingCard { CardValue = cardValue });
                 Thread.Sleep(100);
             }
@@ -294,19 +349,5 @@ namespace BlackJackServices
                     break;
             }
         }
-
-        //public void Clear()
-        //{
-        //    foreach (var item in _repository.playingCardsRepository.GetPlayingCards())
-        //    {
-        //        _repository.playingCardsRepository.DeletePlayingCard(item.Id);
-        //    }
-
-        //    foreach (var item in _repository.GamePlayerRepository.GetGamePlayer())
-        //    {
-        //        _repository.GamePlayerRepository.DeleteGamePlayer(item.Id);
-        //    }
-        //}
-
     }
 }

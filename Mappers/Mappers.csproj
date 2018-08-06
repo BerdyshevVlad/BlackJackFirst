@@ -61,10 +61,6 @@
       <Project>{2983ECCF-B0D3-41A0-A421-ADCE30458A71}</Project>
       <Name>DataAccessLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Entities\Entities.csproj">
-      <Project>{3A95469C-01B5-4899-9E07-76915B639383}</Project>
-      <Name>Entities</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{2F79BC0A-711A-4BF7-A0C5-2F9A78495A4F}</Project>
       <Name>Services</Name>

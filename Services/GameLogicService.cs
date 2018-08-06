@@ -1,4 +1,5 @@
 ﻿using BlackJack.Interfaces;
+using Services.Interfaces;
 using Services.Repositorys;
 using System;
 using System.Collections;
@@ -18,6 +19,7 @@ namespace Services
         private List<GamePlayerViewModel> _GamePlayer = new List<GamePlayerViewModel>();
         private GameSetService _gameSet = new GameSetService();
         private Repository _repository = new Repository();
+        private IMapper _mapper;
 
 
         public GameLogicService()
@@ -25,6 +27,12 @@ namespace Services
             //_gameSet.InitializePlayers();
             //_playingCards=_gameSet.SetDeck();
             //_GamePlayer = _gameSet.GetPlayers();
+        }
+
+
+        public GameLogicService(IMapper mapper)
+        {
+            _mapper = mapper;
         }
 
         public async Task StartGame()
@@ -88,39 +96,39 @@ namespace Services
 
         public void PlayAgain()
         {
-            int tmp = 0;
-            for (int i = 0; tmp < _GamePlayer.Count - 1; i++)
-            {
-                ShowCards();
-                foreach (var item in _GamePlayer)
-                {
-                    if (item.Score < 17 && item.Name != "You")
-                    {
-                        item.Score += OneMoreCard();
-                        Console.WriteLine($"Player:{item.Name}, score: {item.Score}");
-                        Thread.Sleep(100);
-                    }
-                    else if (item.Status != "Stop" && item.Score >= 17 && item.Name != "You")
-                    {
-                        item.Status = "Stop";
-                        tmp++;
-                    }
-                    else if (item.Name == "You" && item.Score < 21)
-                    {
-                        Console.WriteLine("Take or no? y/n");
-                        string yesOrNo = Console.ReadLine();
-                        if (yesOrNo == "y")
-                        {
-                            item.Score += OneMoreCard();
-                            item.Status = "Stop";
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                }
-            }
+            //int tmp = 0;
+            //for (int i = 0; tmp < _GamePlayer.Count - 1; i++)
+            //{
+            //    ShowCards();
+            //    foreach (var item in _GamePlayer)
+            //    {
+            //        if (item.Score < 17 && item.Name != "You")
+            //        {
+            //            item.Score += OneMoreCard();
+            //            Console.WriteLine($"Player:{item.Name}, score: {item.Score}");
+            //            Thread.Sleep(100);
+            //        }
+            //        else if (item.Status != "Stop" && item.Score >= 17 && item.Name != "You")
+            //        {
+            //            item.Status = "Stop";
+            //            tmp++;
+            //        }
+            //        else if (item.Name == "You" && item.Score < 21)
+            //        {
+            //            Console.WriteLine("Take or no? y/n");
+            //            string yesOrNo = Console.ReadLine();
+            //            if (yesOrNo == "y")
+            //            {
+            //                item.Score += OneMoreCard();
+            //                item.Status = "Stop";
+            //            }
+            //            else
+            //            {
+            //                continue;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
 

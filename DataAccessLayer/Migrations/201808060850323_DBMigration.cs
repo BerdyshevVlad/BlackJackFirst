@@ -3,7 +3,7 @@ namespace DataAccessLayer.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class MigrateDB : DbMigration
+    public partial class DBMigration : DbMigration
     {
         public override void Up()
         {
@@ -28,6 +28,7 @@ namespace DataAccessLayer.Migrations
                         Name = c.String(),
                         Score = c.Int(nullable: false),
                         WinsNumbers = c.Int(nullable: false),
+                        Status = c.String(),
                         Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id);

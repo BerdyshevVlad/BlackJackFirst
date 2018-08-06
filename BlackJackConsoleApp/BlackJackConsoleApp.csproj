@@ -70,6 +70,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mappers\Mappers.csproj">
+      <Project>{6A26AA90-17DF-4A42-B701-02E36E339637}</Project>
+      <Name>Mappers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{2F79BC0A-711A-4BF7-A0C5-2F9A78495A4F}</Project>
       <Name>Services</Name>

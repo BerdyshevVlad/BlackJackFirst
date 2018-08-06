@@ -91,6 +91,12 @@ namespace Services.Repositorys
         }
 
 
+        public async Task Update(TEntity item)
+        {
+            _blackJackContex.Entry(item).State = EntityState.Modified;
+            await _blackJackContex.SaveChangesAsync();
+        }
+
         public async Task Save()
         {
             await _blackJackContex.SaveChangesAsync();

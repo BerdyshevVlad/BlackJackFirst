@@ -16,6 +16,7 @@ namespace Services.IRepositorys
         Task Insert(TEntity item);
         Task Delete(TEntity item);
         Task Delete(int id);
+        Task Update(TEntity item);
         Task Save();
     }
 }
