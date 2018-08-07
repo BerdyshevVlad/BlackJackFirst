@@ -1,4 +1,5 @@
 ﻿using BlackJack.Interfaces;
+using DataAccessLayer.Entities;
 using Services.Interfaces;
 using Services.Repositorys;
 using System;
@@ -16,7 +17,7 @@ namespace Services
     {
 
         private List<PlayingCardViewModel> _playingCards = new List<PlayingCardViewModel>();
-        private List<GamePlayerViewModel> _GamePlayer = new List<GamePlayerViewModel>();
+        private List<GamePlayerViewModel> _gamePlayer = new List<GamePlayerViewModel>();
         private GameSetService _gameSet = new GameSetService();
         private Repository _repository = new Repository();
         private IMapper _mapper;
@@ -35,124 +36,231 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task StartGame()
+
+        private static int lastCard=0;
+        public async Task<PlayingCardViewModel> DrawCard()
+        {
+            if (lastCard >= 54)
+            {
+                lastCard = 0;
+            }
+            var cardsList = await _repository.genericPlayingCardsRepository.Get();
+            PlayingCard card = ((cardsList as List<PlayingCard>)[(cardsList as List<PlayingCard>).ToList().Count - ++lastCard] as PlayingCard);
+            PlayingCardViewModel cardModel = new PlayingCardViewModel();
+            cardModel = _mapper.MappCards(card);
+            _repository.playingCardsRepository.DeletePlayingCard(card.Id);
+            _repository.playingCardsRepository.Save();
+            Thread.Sleep(100);
+            return cardModel;
+        }
+
+
+        public async Task<GamePlayerViewModel> TakeCard(GamePlayer player, PlayingCard playingCard)
+        {
+            GamePlayer gamePlayer = await _repository.genericGamePlayerRepository.GetById(player.Id);
+            gamePlayer.Score += playingCard.CardValue;
+            gamePlayer.PlayingCards.Add(playingCard);
+
+            GamePlayerViewModel playerModel = _mapper.MappPlayers(gamePlayer);
+            await _repository.genericGamePlayerRepository.Save();
+            return playerModel;
+        }
+
+
+        public async Task<List<GamePlayerViewModel>> HandOverCards()
+        {
+            List<GamePlayerViewModel> playerModelList = null;
+            int handOutCardsFirstTime = 2;
+            for (int i = 0; i < handOutCardsFirstTime; i++)
+            {
+                GamePlayerViewModel playerModel = null;
+                playerModelList = new List<GamePlayerViewModel>();
+                foreach (var item in await _repository.genericGamePlayerRepository.Get())
+                {
+                    if (item.Score < 17)
+                    {
+                        PlayingCard card = _mapper.MappCardsViewModel(await DrawCard());
+                        playerModel = await TakeCard(item, card);
+                        playerModelList.Add(playerModel);
+                        Thread.Sleep(200);
+                    }
+                }
+            }
+            return playerModelList;
+        }
+
+
+        public async Task Start()
         {
 
-            _GamePlayer = await _gameSet.GetPlayers();
+            var t = await HandOverCards();
 
-            for (int i = 0; i < _GamePlayer.Count; i++)
+            //ShowCards();
+
+            ShowTCardsestWithParam(t);
+            SHowTestResultWithParam(t);
+
+            //ShowResult();
+
+            //PlayAgain();
+
+            //Winner();
+        }
+
+
+        public async Task<GamePlayerViewModel> ContinueOrDeny(GamePlayer player, PlayingCard card,string yesNo)
+        {
+            GamePlayerViewModel playerModel = new GamePlayerViewModel();
+            if (player.Name == "You" && player.Score < 21 && player.Status != "Stop")
             {
-                for (int j = 0; j < 2; j++)
+                //Console.WriteLine("Take or no? y/n");
+                //string yesOrNo = Console.ReadLine();
+                
+                string yesOrNo =yesNo;
+                if (yesOrNo == "y")
                 {
+                    playerModel = await TakeCard(player, card);
+                }
+                if (yesOrNo == "n")
+                {
+                    player.Status = "Stop";
+                    await _repository.genericGamePlayerRepository.Update(player);
+                }
+            }
+            if (player.Name == "You" && player.Score >= 21)
+            {
+                var playerTmp = await _repository.genericGamePlayerRepository.GetById(player.Id);
+                playerTmp.Status = "Stop";
+                await _repository.genericGamePlayerRepository.Save();
+            }
+            if (player.Name != "You" && player.Score < 17)
+            {
+                playerModel = await TakeCard(player, card);
 
-                    //int card = (_playingCards[new Random().Next(0, _playingCards.Count)] as PlayingCardViewModel).CardValue;
-                    int card = OneMoreCard();
-                    _GamePlayer[i].Score += card;
-                    _playingCards.RemoveAt(i);
+            }
+            if (player.Name != "You" && player.Score >= 17)
+            {
+                var playerTmp= await _repository.genericGamePlayerRepository.GetById(player.Id);
+                playerTmp.Status = "Stop";
+
+                await _repository.genericGamePlayerRepository.Save();
+            }
+
+            return playerModel;
+        }
 
 
-                    if (_GamePlayer[i].Score == 11)
+
+
+
+        //public async Task PlayAgain()
+        //{
+        //    for (; ; )
+        //    {
+        //        var playersList = (await _repository.genericGamePlayerRepository.Get() as List<GamePlayer>).ToList().Where(x => x.Status != "Stop").ToList();
+        //        if (playersList.Count <= 0)
+        //        {
+        //            break;
+        //        }
+
+        //        for (int j = 0; j < playersList.Count; j++)
+        //        {
+        //            PlayingCard card = _mapper.MappCardsViewModel(await DrawCard());
+        //            GamePlayerViewModel playerModel = await ContinueOrDeny((playersList)[j], card);
+        //        }
+
+
+        //        ShowCards();
+        //        ShowResult();
+        //    }
+        //}
+
+        public async Task<List<GamePlayerViewModel>> PlayAgain(string yesOrNo)
+        {
+            List<GamePlayerViewModel> playerModelList= new List<GamePlayerViewModel>();
+            if (yesOrNo == "n")
+            {
+                for (; ; )
+                {
+                    var playersList = (await _repository.genericGamePlayerRepository.Get() as List<GamePlayer>).ToList().Where(x => x.Status != "Stop").ToList();
+                    if (playersList.Count <= 0)
                     {
-                        Console.WriteLine($"Player: { _GamePlayer[i].Name}, Score: Jack");
+                        break;
                     }
-                    else if (_GamePlayer[i].Score == 12)
+                    for (int j = 0; j < playersList.Count; j++)
                     {
-                        Console.WriteLine($"Player: { _GamePlayer[i].Name}, Score: Queen");
+                        PlayingCard card = _mapper.MappCardsViewModel(await DrawCard());
+                        GamePlayerViewModel playerModel = await ContinueOrDeny((playersList)[j], card, yesOrNo);
                     }
-                    else if (_GamePlayer[i].Score == 13)
-                    {
-                        Console.WriteLine($"Player: { _GamePlayer[i].Name}, Score: King");
-                    }
-                    else
-                        Console.WriteLine($"Player: { _GamePlayer[i].Name}, Score: { card}");
+                }
+            }
+            if (yesOrNo == "y")
+            {
+                var playersList = (await _repository.genericGamePlayerRepository.Get() as List<GamePlayer>).ToList().Where(x => x.Status != "Stop").ToList();
+                for (int j = 0; j < playersList.Count; j++)
+                {
+                    PlayingCard card = _mapper.MappCardsViewModel(await DrawCard());
+                    GamePlayerViewModel playerModel = await ContinueOrDeny((playersList)[j], card, yesOrNo);
+                }
+            }
+
+            playerModelList =_mapper.MappPlayers((await _repository.genericGamePlayerRepository.Get() as List<GamePlayer>));
+
+            return playerModelList;
+        }
+
+
+        public async Task ShowCards()
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach (var item in await _repository.genericGamePlayerRepository.Get())
+            {
+                Console.Write($"Player: {item.Name}: ");
+                foreach (var i in item.PlayingCards)
+                {
+                    Console.Write($"Card: {i.CardValue}, ");
+
                 }
                 Console.WriteLine();
             }
+        }
 
-            foreach (var item in await _repository.genericGamePlayerRepository.Get())
+        public void ShowTCardsestWithParam(List<GamePlayerViewModel> playerModel)
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach (var item in playerModel)
             {
-                await _repository.genericGamePlayerRepository.Delete(item.Id);
+                Console.Write($"Player: {item.Name}: ");
+                foreach (var i in item.PlayingCards)
+                {
+                    Console.Write($"Card: {i.CardValue}, ");
 
+                }
+                Console.WriteLine();
             }
-
-            //foreach (var item in _GamePlayer)
-            //{
-            //    _repository.GamePlayerRepository.InsertGamePlayer(item);
-            //    Thread.Sleep(100);
-            //}
-
-            PlayAgain();
-            Winner();
-
         }
 
 
-        public int OneMoreCard()
-        {
-            int card = (_playingCards[new Random().Next(0, _playingCards.Count)] as PlayingCardViewModel).CardValue;
-            return card;
-        }
-
-
-        public void PlayAgain()
-        {
-            //int tmp = 0;
-            //for (int i = 0; tmp < _GamePlayer.Count - 1; i++)
-            //{
-            //    ShowCards();
-            //    foreach (var item in _GamePlayer)
-            //    {
-            //        if (item.Score < 17 && item.Name != "You")
-            //        {
-            //            item.Score += OneMoreCard();
-            //            Console.WriteLine($"Player:{item.Name}, score: {item.Score}");
-            //            Thread.Sleep(100);
-            //        }
-            //        else if (item.Status != "Stop" && item.Score >= 17 && item.Name != "You")
-            //        {
-            //            item.Status = "Stop";
-            //            tmp++;
-            //        }
-            //        else if (item.Name == "You" && item.Score < 21)
-            //        {
-            //            Console.WriteLine("Take or no? y/n");
-            //            string yesOrNo = Console.ReadLine();
-            //            if (yesOrNo == "y")
-            //            {
-            //                item.Score += OneMoreCard();
-            //                item.Status = "Stop";
-            //            }
-            //            else
-            //            {
-            //                continue;
-            //            }
-            //        }
-            //    }
-            //}
-        }
-
-
-        public void ShowCards()
+        public void SHowTestResultWithParam(List<GamePlayerViewModel> playerModel)
         {
             Console.WriteLine();
             Console.WriteLine();
-            foreach (var item in _GamePlayer)
+            foreach (var item in playerModel)
             {
                 Console.WriteLine($"Player: {item.Name}, Sum: {item.Score}");
             }
         }
 
 
-        public void Winner()
+        public async Task ShowResult()
         {
-            int max = _GamePlayer.Where(x => x.Score <= 21).Max(x => x.Score);
-            Console.WriteLine("Winners: ");
-            foreach (var item in _GamePlayer)
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach (var item in await _repository.genericGamePlayerRepository.Get())
             {
-                if (item.Score == max)
-                {
-                    Console.WriteLine($"Player: { item.Name} has won!");
-                }
+                Console.WriteLine($"Player: {item.Name}, Sum: {item.Score}");
             }
         }
     }

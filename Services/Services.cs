@@ -14,7 +14,7 @@ namespace BlackJackServices
         private Repository _repository = new Repository();
         private List<GamePlayer> _gamePlayers = new List<GamePlayer>();
         private List<PlayingCard> playingCards = new List<PlayingCard>();
-        private List<GamePlayerViewModel> playerViewModelList = new List<GamePlayerViewModel>();
+        //private List<GamePlayerViewModel> playerViewModelList = new List<GamePlayerViewModel>();
         private IMapper _mapper;
 
 
@@ -91,7 +91,7 @@ namespace BlackJackServices
         
         public PlayingCardViewModel DrawCard()
         {
-            PlayingCard card = (playingCards[GetCards().Count-1] as PlayingCard);
+            PlayingCard card = (GetCards().ToList()[GetCards().ToList().Count-1] as PlayingCard);
             PlayingCardViewModel cardModel = new PlayingCardViewModel();
             cardModel = _mapper.MappCards(card);
             _repository.playingCardsRepository.DeletePlayingCard(card.Id);
@@ -147,9 +147,9 @@ namespace BlackJackServices
 
             //ShowResult();
 
-            //PlayAgain();
+            PlayAgain();
 
-            //Winner();
+            Winner();
         }
 
 
@@ -329,13 +329,15 @@ namespace BlackJackServices
         }
 
 
-        private List<PlayingCard> GetCards()
+        private IEnumerable<PlayingCard> GetCards()
         {
-            foreach (var item in _repository.playingCardsRepository.GetPlayingCards())
-            {
-                playingCards.Add(item);
-            }
-            return playingCards;
+            //foreach (var item in _repository.playingCardsRepository.GetPlayingCards())
+            //{
+            //    playingCards.Add(item);
+            //}
+            //return playingCards;
+
+            return _repository.playingCardsRepository.GetPlayingCards();
         }
 
 

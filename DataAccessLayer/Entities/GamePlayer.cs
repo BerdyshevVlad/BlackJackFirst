@@ -15,6 +15,11 @@ namespace DataAccessLayer.Entities
         public int Score { get; set; }
         public int WinsNumbers { get; set; }
         public string Status { get; set; }
-        public virtual IEnumerable<PlayingCard> PlayingCards { get; set; }
+        public virtual ICollection<PlayingCard> PlayingCards { get; set; }
+
+        public GamePlayer()
+        {
+            PlayingCards = new List<PlayingCard>();
+        }
     }
 }

@@ -72,6 +72,7 @@ namespace Mappers
             for (int i = 0; i < gamePlayers.Count; i++)
             {
                 var player = new GamePlayerViewModel();
+                player.Id = gamePlayers[i].Id;
                 player.Name = gamePlayers[i].Name;
                 player.Score = gamePlayers[i].Score;
                 player.PlayingCards = gamePlayers[i].PlayingCards;
@@ -91,9 +92,10 @@ namespace Mappers
             {
                 Type type = gamePlayers.GetType();
                 object playerModel = Activator.CreateInstance(type);
+                (playerModel as GamePlayer).Id = gamePlayers[i].Id;
                 (playerModel as GamePlayer).Name = gamePlayers[i].Name;
                 (playerModel as GamePlayer).Score = gamePlayers[i].Score;
-                (playerModel as GamePlayer).PlayingCards = gamePlayers[i].PlayingCards;
+                (playerModel as GamePlayer).PlayingCards=gamePlayers[i].PlayingCards as  ICollection<PlayingCard>;
                 (playerModel as GamePlayer).Status = gamePlayers[i].Status;
                 (playerModel as GamePlayer).WinsNumbers = gamePlayers[i].WinsNumbers;
                 playersViewModelList.Add(playerModel as GamePlayer);

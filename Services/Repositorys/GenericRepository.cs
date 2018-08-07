@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Services.Repositorys
 {
-    class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         private BlackJackContext _blackJackContex;
         private DbSet<TEntity> _dbSet;
@@ -82,6 +83,7 @@ namespace Services.Repositorys
         public async Task Insert(TEntity playingCard)
         {
              _dbSet.Add(playingCard);
+            Thread.Sleep(200);
             await _blackJackContex.SaveChangesAsync();
         }
 
@@ -94,7 +96,8 @@ namespace Services.Repositorys
 
         public async Task Save()
         {
-            await _blackJackContex.SaveChangesAsync();
+            //await _blackJackContex.SaveChangesAsync();
+            _blackJackContex.SaveChanges();
         }
     }
 }

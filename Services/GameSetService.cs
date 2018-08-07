@@ -39,7 +39,7 @@ namespace Services
 
                     if (_repository.genericGamePlayerRepository.IsExist($"Bot{i}") == false)
                     {
-                        await _repository.genericGamePlayerRepository.Insert(new PlayerBot { Name = $"Bot{i}" });
+                        await _repository.genericGamePlayerRepository.Insert(new PlayerBot { Name = $"Bot{i}"/*,PlayingCards=new List<PlayingCard>()*/});
                     }
                 }
             }
@@ -73,12 +73,36 @@ namespace Services
         }
 
 
+        public async Task<List<PlayingCardViewModel>> GetDeck()
+        {
+            List<PlayingCard> playingCards = new List<PlayingCard>();
+            List<PlayingCardViewModel> playingCardsViewModel;
+            try
+            {
+                foreach (var item in await _repository.genericPlayingCardsRepository.Get())
+                {
+
+                    playingCards.Add(item);
+                    if (playingCards.Count < 54)
+                        continue;
+                }
+                playingCardsViewModel = _mapper.MappCards((playingCards as List<PlayingCard>));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return playingCardsViewModel;
+        }
+
+
         public async Task InitializePlayers()
         {
             var dealer = new Dealer();
             dealer.Name = "Dealer";
             var playerPerson = new PlayerPerson();
             playerPerson.Name = "You";
+
 
             try
             {
@@ -119,7 +143,7 @@ namespace Services
                         }
 
                         await _repository.genericPlayingCardsRepository.Insert(new PlayingCard { CardValue = cardValue });
-                        Thread.Sleep(100);
+                        //Thread.Sleep(200);
                     }
                 }
             }
@@ -127,29 +151,6 @@ namespace Services
             {
                 throw new Exception(ex.Message);
             }
-        }
-
-
-        public async Task<List<PlayingCardViewModel>> GetDeck()
-        {
-            List<PlayingCard> playingCards = new List<PlayingCard>();
-            List<PlayingCardViewModel> playingCardsViewModel;
-            try
-            {
-                foreach (var item in await _repository.genericPlayingCardsRepository.Get())
-                {
-
-                    playingCards.Add(item);
-                    if (playingCards.Count < 54)
-                        continue;
-                }
-                playingCardsViewModel = _mapper.MappCards((playingCards as List<PlayingCard>));
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return playingCardsViewModel;
         }
 
 
@@ -174,6 +175,21 @@ namespace Services
                 throw new Exception(ex.Message);
             }
             return playingCardsViewModel;
+        }
+
+
+        public async Task StartNewGame()
+        {
+            await ReSetDeck();
+            foreach (var item in await _repository.genericGamePlayerRepository.Get())
+            {
+                await _repository.genericGamePlayerRepository.Delete(item.Id);
+            }
+
+            //foreach (var item in await _repository.genericPlayingCardsRepository.Get())
+            //{
+            //    await _repository.genericPlayingCardsRepository.Delete(item.Id);
+            //}
         }
     }
 }

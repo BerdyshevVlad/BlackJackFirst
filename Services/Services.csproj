@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Autofac.Mvc5" Version="4.0.2" />
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
@@ -13,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
-    <ProjectReference Include="..\Entities\Entities.csproj" />
     <ProjectReference Include="..\ViewModels\ViewModels.csproj" />
   </ItemGroup>
 
