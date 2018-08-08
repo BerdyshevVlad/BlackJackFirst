@@ -81,9 +81,9 @@
     <Compile Include="Entities\PlayerBot.cs" />
     <Compile Include="Entities\PlayerPerson.cs" />
     <Compile Include="Entities\PlayingCard.cs" />
-    <Compile Include="Migrations\201808070758359_DBMigration.cs" />
-    <Compile Include="Migrations\201808070758359_DBMigration.Designer.cs">
-      <DependentUpon>201808070758359_DBMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201808081041083_Init.cs" />
+    <Compile Include="Migrations\201808081041083_Init.Designer.cs">
+      <DependentUpon>201808081041083_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,8 +93,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201808070758359_DBMigration.resx">
-      <DependentUpon>201808070758359_DBMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808081041083_Init.resx">
+      <DependentUpon>201808081041083_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

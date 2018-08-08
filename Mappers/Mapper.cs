@@ -75,7 +75,8 @@ namespace Mappers
                 player.Id = gamePlayers[i].Id;
                 player.Name = gamePlayers[i].Name;
                 player.Score = gamePlayers[i].Score;
-                player.PlayingCards = gamePlayers[i].PlayingCards;
+                player.PlayingCards = gamePlayers[i].PlayerCards;
+                //player.PlayingCards = gamePlayers[i].PlayingCards;
                 player.Status = gamePlayers[i].Status;
                 player.WinsNumbers = gamePlayers[i].WinsNumbers;
                 playersViewModelList.Add(player);
@@ -95,7 +96,11 @@ namespace Mappers
                 (playerModel as GamePlayer).Id = gamePlayers[i].Id;
                 (playerModel as GamePlayer).Name = gamePlayers[i].Name;
                 (playerModel as GamePlayer).Score = gamePlayers[i].Score;
-                (playerModel as GamePlayer).PlayingCards=gamePlayers[i].PlayingCards as  ICollection<PlayingCard>;
+                foreach (var item in gamePlayers[i].PlayingCards)
+                {
+                    (playerModel as GamePlayer).PlayerCards.Add(item);
+                }
+                //(playerModel as GamePlayer).PlayingCards=gamePlayers[i].PlayingCards as  ICollection<PlayingCard>;
                 (playerModel as GamePlayer).Status = gamePlayers[i].Status;
                 (playerModel as GamePlayer).WinsNumbers = gamePlayers[i].WinsNumbers;
                 playersViewModelList.Add(playerModel as GamePlayer);
@@ -109,7 +114,8 @@ namespace Mappers
             var player = new GamePlayerViewModel();
             player.Name = gamePlayers.Name;
             player.Score = gamePlayers.Score;
-            player.PlayingCards = gamePlayers.PlayingCards;
+            player.PlayingCards = gamePlayers.PlayerCards;
+            //player.PlayingCards = gamePlayers.PlayingCards;
             player.Status = gamePlayers.Status;
             player.WinsNumbers = gamePlayers.WinsNumbers;
 

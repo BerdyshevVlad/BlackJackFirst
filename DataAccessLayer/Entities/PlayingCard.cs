@@ -26,11 +26,16 @@ namespace DataAccessLayer.Entities
     }
     public class PlayingCard
     {
+        public PlayingCard()
+        {
+            this.Players = new HashSet<GamePlayer>();
+        }
+
+
         [Key]
         public int Id { get; set; }
         public int CardValue { get; set; }
 
-        public int? GamePlayerId { get; set; }
-        public GamePlayer GamePlayer { get; set; }
+        public virtual ICollection<GamePlayer> Players { get; set; }
     }
 }

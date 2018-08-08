@@ -21,8 +21,13 @@ namespace DataAccessLayer
         public BlackJackContext() : base("BlackJackContext")
         { }
         public DbSet<GamePlayer> Players { get; set; }
-        public DbSet<PlayingCard> PlayingCards { get; set; }
+        public DbSet<PlayingCard> Cards { get; set; }
         public DbSet<ExceptionDetail> ExceptionDetails { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 
     public class BlackJackDbInitializer : DropCreateDatabaseAlways<BlackJackContext>

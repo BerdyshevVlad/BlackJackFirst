@@ -57,7 +57,6 @@ namespace Services
             try
             {
                 foreach (var item in await _repository.genericGamePlayerRepository.Get())
-                //foreach (var item in _repository.genericGamePlayerRepository.GetPlayers())
                 {
                     _GamePlayer.Add(item);
                 }
@@ -103,7 +102,6 @@ namespace Services
             var playerPerson = new PlayerPerson();
             playerPerson.Name = "You";
 
-
             try
             {
                 if (_repository.genericGamePlayerRepository.IsExist(dealer.Name) == false && _repository.genericGamePlayerRepository.IsExist(playerPerson.Name) == false)
@@ -123,8 +121,8 @@ namespace Services
         {
             try
             {
-                if (_repository.genericPlayingCardsRepository.IsExist() == false)
-                {
+                //if (_repository.genericPlayingCardsRepository.IsExist() == false)
+                //{
                     var countOfDeckCards = 54;
                     for (int i = 0; i < countOfDeckCards; i++)
                     {
@@ -142,10 +140,10 @@ namespace Services
                             cardValue = 3;
                         }
 
-                        await _repository.genericPlayingCardsRepository.Insert(new PlayingCard { CardValue = cardValue });
+                        await _repository.genericPlayingCardsRepository.Insert(new PlayingCard { CardValue = cardValue});
                         //Thread.Sleep(200);
                     }
-                }
+                //}
             }
             catch(Exception ex)
             {
@@ -185,11 +183,6 @@ namespace Services
             {
                 await _repository.genericGamePlayerRepository.Delete(item.Id);
             }
-
-            //foreach (var item in await _repository.genericPlayingCardsRepository.Get())
-            //{
-            //    await _repository.genericPlayingCardsRepository.Delete(item.Id);
-            //}
         }
     }
 }

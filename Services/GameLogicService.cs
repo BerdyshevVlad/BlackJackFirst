@@ -40,12 +40,12 @@ namespace Services
         private static int lastCard=0;
         public async Task<PlayingCardViewModel> DrawCard()
         {
-            if (lastCard >= 54)
+            if (lastCard > 52)
             {
                 lastCard = 0;
             }
             var cardsList = await _repository.genericPlayingCardsRepository.Get();
-            PlayingCard card = ((cardsList as List<PlayingCard>)[(cardsList as List<PlayingCard>).ToList().Count - ++lastCard] as PlayingCard);
+            PlayingCard card = ((cardsList as List<PlayingCard>)[(cardsList.AsEnumerable()).ToList().Count - ++lastCard] as PlayingCard);
             PlayingCardViewModel cardModel = new PlayingCardViewModel();
             cardModel = _mapper.MappCards(card);
             _repository.playingCardsRepository.DeletePlayingCard(card.Id);
@@ -59,7 +59,12 @@ namespace Services
         {
             GamePlayer gamePlayer = await _repository.genericGamePlayerRepository.GetById(player.Id);
             gamePlayer.Score += playingCard.CardValue;
-            gamePlayer.PlayingCards.Add(playingCard);
+
+            //PlayingCard card = playingCard;
+            //card.Players.Add(gamePlayer);
+            //gamePlayer.PlayerCards.Add(card);
+
+            gamePlayer.PlayerCards.Add(playingCard);
 
             GamePlayerViewModel playerModel = _mapper.MappPlayers(gamePlayer);
             await _repository.genericGamePlayerRepository.Save();
@@ -86,6 +91,7 @@ namespace Services
                     }
                 }
             }
+
             return playerModelList;
         }
 
@@ -95,15 +101,8 @@ namespace Services
 
             var t = await HandOverCards();
 
-            //ShowCards();
-
-            ShowTCardsestWithParam(t);
-            SHowTestResultWithParam(t);
-
-            //ShowResult();
-
-            //PlayAgain();
-
+            //ShowTCardsestWithParam(t);
+            //SHowTestResultWithParam(t);
             //Winner();
         }
 
@@ -112,10 +111,7 @@ namespace Services
         {
             GamePlayerViewModel playerModel = new GamePlayerViewModel();
             if (player.Name == "You" && player.Score < 21 && player.Status != "Stop")
-            {
-                //Console.WriteLine("Take or no? y/n");
-                //string yesOrNo = Console.ReadLine();
-                
+            {                
                 string yesOrNo =yesNo;
                 if (yesOrNo == "y")
                 {
@@ -210,58 +206,58 @@ namespace Services
         }
 
 
-        public async Task ShowCards()
-        {
-            Console.WriteLine();
-            Console.WriteLine();
-            foreach (var item in await _repository.genericGamePlayerRepository.Get())
-            {
-                Console.Write($"Player: {item.Name}: ");
-                foreach (var i in item.PlayingCards)
-                {
-                    Console.Write($"Card: {i.CardValue}, ");
+        //public async Task ShowCards()
+        //{
+        //    Console.WriteLine();
+        //    Console.WriteLine();
+        //    foreach (var item in await _repository.genericGamePlayerRepository.Get())
+        //    {
+        //        Console.Write($"Player: {item.Name}: ");
+        //        foreach (var i in item.PlayingCards)
+        //        {
+        //            Console.Write($"Card: {i.CardValue}, ");
 
-                }
-                Console.WriteLine();
-            }
-        }
+        //        }
+        //        Console.WriteLine();
+        //    }
+        //}
 
-        public void ShowTCardsestWithParam(List<GamePlayerViewModel> playerModel)
-        {
-            Console.WriteLine();
-            Console.WriteLine();
-            foreach (var item in playerModel)
-            {
-                Console.Write($"Player: {item.Name}: ");
-                foreach (var i in item.PlayingCards)
-                {
-                    Console.Write($"Card: {i.CardValue}, ");
+        //public void ShowTCardsestWithParam(List<GamePlayerViewModel> playerModel)
+        //{
+        //    Console.WriteLine();
+        //    Console.WriteLine();
+        //    foreach (var item in playerModel)
+        //    {
+        //        Console.Write($"Player: {item.Name}: ");
+        //        foreach (var i in item.PlayingCards)
+        //        {
+        //            Console.Write($"Card: {i.CardValue}, ");
 
-                }
-                Console.WriteLine();
-            }
-        }
-
-
-        public void SHowTestResultWithParam(List<GamePlayerViewModel> playerModel)
-        {
-            Console.WriteLine();
-            Console.WriteLine();
-            foreach (var item in playerModel)
-            {
-                Console.WriteLine($"Player: {item.Name}, Sum: {item.Score}");
-            }
-        }
+        //        }
+        //        Console.WriteLine();
+        //    }
+        //}
 
 
-        public async Task ShowResult()
-        {
-            Console.WriteLine();
-            Console.WriteLine();
-            foreach (var item in await _repository.genericGamePlayerRepository.Get())
-            {
-                Console.WriteLine($"Player: {item.Name}, Sum: {item.Score}");
-            }
-        }
+        //public void SHowTestResultWithParam(List<GamePlayerViewModel> playerModel)
+        //{
+        //    Console.WriteLine();
+        //    Console.WriteLine();
+        //    foreach (var item in playerModel)
+        //    {
+        //        Console.WriteLine($"Player: {item.Name}, Sum: {item.Score}");
+        //    }
+        //}
+
+
+        //public async Task ShowResult()
+        //{
+        //    Console.WriteLine();
+        //    Console.WriteLine();
+        //    foreach (var item in await _repository.genericGamePlayerRepository.Get())
+        //    {
+        //        Console.WriteLine($"Player: {item.Name}, Sum: {item.Score}");
+        //    }
+        //}
     }
 }

@@ -49,7 +49,7 @@ namespace Services.Repositorys
 
         public bool IsExistCards()
         {
-            return _blackJackContex.PlayingCards.Any();
+            return _blackJackContex.Cards.Any();
         }
 
 

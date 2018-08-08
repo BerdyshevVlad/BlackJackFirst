@@ -10,14 +10,6 @@ namespace BlackJack.Interfaces
 {
     public interface IGamePlay
     {
-        //Task StartGame();
-        //int OneMoreCard();
-        //void PlayAgain();
-        //void ShowCards();
-        //void Winner();
-
-        //IEnumerable<PlayingCard> GetCards();
-        //IEnumerable<GamePlayer> GetPlayers();
         Task<PlayingCardViewModel> DrawCard();
         Task<GamePlayerViewModel> TakeCard(GamePlayer player, PlayingCard playingCard);
         Task<List<GamePlayerViewModel>> HandOverCards();
@@ -25,9 +17,9 @@ namespace BlackJack.Interfaces
         Task<GamePlayerViewModel> ContinueOrDeny(GamePlayer player, PlayingCard card,string yesOrNo);
         //Task PlayAgain();
         Task<List<GamePlayerViewModel>> PlayAgain(string yesOrNo);
-        Task ShowCards();
-        void ShowTCardsestWithParam(List<GamePlayerViewModel> playerModel);
-        void SHowTestResultWithParam(List<GamePlayerViewModel> playerModel);
-        Task ShowResult();
+        //Task ShowCards();
+        //void ShowTCardsestWithParam(List<GamePlayerViewModel> playerModel);
+        //void SHowTestResultWithParam(List<GamePlayerViewModel> playerModel);
+        //Task ShowResult();
     }
 }

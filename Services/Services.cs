@@ -38,7 +38,8 @@ namespace BlackJackServices
             int botCount = playersCount > maxCount ? maxCount : playersCount;
             for (int i = 0; i < botCount; i++)
             {
-                _repository.GamePlayerRepository.InsertGamePlayer(new PlayerBot { Name = $"Bot{i}",PlayingCards=new List<PlayingCard>()});
+                //_repository.GamePlayerRepository.InsertGamePlayer(new PlayerBot { Name = $"Bot{i}",PlayingCards=new List<PlayingCard>()});
+                _repository.GamePlayerRepository.InsertGamePlayer(new PlayerBot { Name = $"Bot{i}"});
                 _repository.GamePlayerRepository.Save();
             }
         }
@@ -106,7 +107,7 @@ namespace BlackJackServices
             var gamePlayer = _repository.GamePlayerRepository.GetGamePlayerById(player.Id);
             gamePlayer.Score += playingCard.CardValue;
             var playerModel = _mapper.MappPlayers(gamePlayer);
-            (_repository.GamePlayerRepository.GetGamePlayerById(player.Id).PlayingCards as List<PlayingCard>).Add(playingCard);
+            //(_repository.GamePlayerRepository.GetGamePlayerById(player.Id).PlayingCards as List<PlayingCard>).Add(playingCard);
             _repository.GamePlayerRepository.Save();
             return playerModel;
         }
@@ -206,7 +207,7 @@ namespace BlackJackServices
                 }
 
 
-                ShowCards();
+                //ShowCards();
                 ShowResult();
             }
         }
@@ -268,21 +269,21 @@ namespace BlackJackServices
         }
 
 
-        public void ShowCards()
-        {
-            Console.WriteLine();
-            Console.WriteLine();
-            foreach (var item in _repository.GamePlayerRepository.GetGamePlayer())
-            {
-                Console.Write($"Player: {item.Name}: ");
-                foreach (var i in item.PlayingCards)
-                {
-                    Console.Write($"Card: {i.CardValue}, ");
+        //public void ShowCards()
+        //{
+        //    Console.WriteLine();
+        //    Console.WriteLine();
+        //    foreach (var item in _repository.GamePlayerRepository.GetGamePlayer())
+        //    {
+        //        Console.Write($"Player: {item.Name}: ");
+        //        foreach (var i in item.PlayingCards)
+        //        {
+        //            Console.Write($"Card: {i.CardValue}, ");
                     
-                }
-                Console.WriteLine();
-            }
-        }
+        //        }
+        //        Console.WriteLine();
+        //    }
+        //}
 
         public void ShowTCardsestWithParam(List<GamePlayerViewModel> playerModel)
         {
@@ -347,8 +348,8 @@ namespace BlackJackServices
             dealer.Name = "Dealer";
             var playerPerson = new PlayerPerson();
             playerPerson.Name = "You";
-            dealer.PlayingCards = new List<PlayingCard>();
-            playerPerson.PlayingCards = new List<PlayingCard>();
+            //dealer.PlayingCards = new List<PlayingCard>();
+            //playerPerson.PlayingCards = new List<PlayingCard>();
             _repository.GamePlayerRepository.InsertGamePlayer(dealer);
             _repository.GamePlayerRepository.InsertGamePlayer(playerPerson);
         }
