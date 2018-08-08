@@ -18,6 +18,7 @@ namespace Services.Repositorys
         public GenericRepository(BlackJackContext blackJackContex)
         {
             _blackJackContex = blackJackContex;
+            _blackJackContex.Configuration.ProxyCreationEnabled = false;
             _dbSet = blackJackContex.Set<TEntity>();
             //connectionString = ConfigurationManager.ConnectionStrings["BlackJackContex"].ConnectionString;
         }

@@ -1,0 +1,17 @@
+﻿@model IEnumerable<ViewModels.GamePlayerViewModel>
+@{
+    ViewBag.Title = "Winner";
+}
+
+<h2>Winner</h2>
+
+<table class="table">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name):                    @Html.DisplayFor(modelItem => item.Score)
+            </td>
+        </tr>
+    }
+</table>

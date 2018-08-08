@@ -44,12 +44,12 @@ namespace BlackJack.Controllers
         }
 
 
-        //public async Task<ActionResult> ReSetDeck()
-        //{
-        //    await _gameSetService.ReSetDeck();
-        //    List<PlayingCardViewModel> cards = await _gameSetService.GetDeck();
-        //    return View("SetDeck", cards);
-        //}
+        public async Task<ActionResult> ReSetDeck()
+        {
+            await _gameSetService.ReSetDeck();
+            List<PlayingCardViewModel> cards = await _gameSetService.GetDeck();
+            return View("SetDeck", cards);
+        }
 
 
         [ExceptionLogger]

@@ -49,7 +49,6 @@ namespace Services
             PlayingCardViewModel cardModel = new PlayingCardViewModel();
             cardModel = _mapper.MappCards(card);
             _repository.playingCardsRepository.DeletePlayingCard(card.Id);
-            _repository.playingCardsRepository.Save();
             Thread.Sleep(100);
             return cardModel;
         }
@@ -59,10 +58,6 @@ namespace Services
         {
             GamePlayer gamePlayer = await _repository.genericGamePlayerRepository.GetById(player.Id);
             gamePlayer.Score += playingCard.CardValue;
-
-            //PlayingCard card = playingCard;
-            //card.Players.Add(gamePlayer);
-            //gamePlayer.PlayerCards.Add(card);
 
             gamePlayer.PlayerCards.Add(playingCard);
 
@@ -146,31 +141,6 @@ namespace Services
         }
 
 
-
-
-
-        //public async Task PlayAgain()
-        //{
-        //    for (; ; )
-        //    {
-        //        var playersList = (await _repository.genericGamePlayerRepository.Get() as List<GamePlayer>).ToList().Where(x => x.Status != "Stop").ToList();
-        //        if (playersList.Count <= 0)
-        //        {
-        //            break;
-        //        }
-
-        //        for (int j = 0; j < playersList.Count; j++)
-        //        {
-        //            PlayingCard card = _mapper.MappCardsViewModel(await DrawCard());
-        //            GamePlayerViewModel playerModel = await ContinueOrDeny((playersList)[j], card);
-        //        }
-
-
-        //        ShowCards();
-        //        ShowResult();
-        //    }
-        //}
-
         public async Task<List<GamePlayerViewModel>> PlayAgain(string yesOrNo)
         {
             List<GamePlayerViewModel> playerModelList= new List<GamePlayerViewModel>();
@@ -192,7 +162,7 @@ namespace Services
             }
             if (yesOrNo == "y")
             {
-                var playersList = (await _repository.genericGamePlayerRepository.Get() as List<GamePlayer>).ToList().Where(x => x.Status != "Stop").ToList();
+                var playersList = (await _repository.genericGamePlayerRepository.Get()).ToList().Where(x => x.Status != "Stop").ToList();
                 for (int j = 0; j < playersList.Count; j++)
                 {
                     PlayingCard card = _mapper.MappCardsViewModel(await DrawCard());
@@ -205,6 +175,24 @@ namespace Services
             return playerModelList;
         }
 
+
+        public async Task<List<GamePlayerViewModel>> Winner()
+        {
+            var playerList= await _repository.genericGamePlayerRepository.Get();
+            var max=playerList.Where(x => x.Score <= 21).Max(x => x.Score);
+            foreach (var item in playerList)
+            {
+                if (item.Score == max)
+                {
+                    item.WinsNumbers++;
+                    await _repository.genericGamePlayerRepository.Save();
+                }
+            }
+
+            var tmp = playerList.Where(x => x.Score == max).ToList();
+            List<GamePlayerViewModel> playerModel = _mapper.MappPlayers(tmp);
+            return playerModel;
+        }
 
         //public async Task ShowCards()
         //{

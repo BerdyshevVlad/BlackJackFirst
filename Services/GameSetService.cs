@@ -121,8 +121,8 @@ namespace Services
         {
             try
             {
-                //if (_repository.genericPlayingCardsRepository.IsExist() == false)
-                //{
+                if (_repository.genericPlayingCardsRepository.IsExist() == false)
+                {
                     var countOfDeckCards = 54;
                     for (int i = 0; i < countOfDeckCards; i++)
                     {
@@ -141,9 +141,8 @@ namespace Services
                         }
 
                         await _repository.genericPlayingCardsRepository.Insert(new PlayingCard { CardValue = cardValue});
-                        //Thread.Sleep(200);
                     }
-                //}
+                }
             }
             catch(Exception ex)
             {

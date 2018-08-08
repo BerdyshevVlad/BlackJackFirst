@@ -19,6 +19,7 @@ namespace BlackJack.Controllers
         }
 
 
+        [HttpGet]
         public async Task<ActionResult> HandOverCards()
         {
             List <GamePlayerViewModel> playersModel=await _gameLogic.HandOverCards();
@@ -30,6 +31,13 @@ namespace BlackJack.Controllers
         public async Task<ActionResult> PlayAgain(string yesOrNo)
         {
             List<GamePlayerViewModel> playersModel = await _gameLogic.PlayAgain(yesOrNo);
+            return Json(playersModel, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public async Task<ActionResult> Winner()
+        {
+            List<GamePlayerViewModel> playersModel = await _gameLogic.Winner();
             return View(playersModel);
         }
 
